@@ -17,10 +17,10 @@ const IndexPage = () => {
                 </span>
                 <h1 className="fade-up delay-1 text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
                     ศูนย์กลาง<br />
-                    <span className="text-indigo-600">งานวิจัยไทย</span>
+                    <span className="text-indigo-600">งานวิจัยคณะวิศวกรรมศาสตร์</span>
                 </h1>
                 <p className="fade-up delay-2 text-lg text-gray-500 leading-relaxed mb-8 max-w-lg">
-                    รวบรวม จัดเก็บ และเผยแพร่งานวิจัยจากนักวิจัยทั่วประเทศ เพื่อต่อยอดองค์ความรู้อย่างยั่งยืน
+                    รวบรวม จัดเก็บ และเผยแพร่งานวิจัยจากนักวิจัยทั่วทั้งมหาวิทยาลัย
                 </p>
                 <div className="fade-up delay-3 flex flex-wrap gap-3">
                     <Link to="/research" className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200">
@@ -112,8 +112,8 @@ const IndexPage = () => {
       {/* ================= FOOTER ================= */}
       <footer className="bg-white border-t border-gray-100 py-8 mt-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3">
-            <span className="text-indigo-600 font-bold text-lg" style={{ fontFamily: "'Chakra Petch', sans-serif" }}>ResearchHub</span>
-            <p className="text-gray-400 text-sm">© 2568 ResearchHub · ศูนย์กลางงานวิจัยไทย</p>
+            <span className="text-indigo-600 font-bold text-lg" style={{ fontFamily: "'Chakra Petch', sans-serif" }}>ENNU ResearchHub</span>
+            <p className="text-gray-400 text-sm">© 2569 ENNU ResearchHub · ศูนย์กลางงานวิจัยคณะวิศวกรรมศาสตร์มหาวิทยาลัยนเรศวร</p>
         </div>
       </footer>
     </>
