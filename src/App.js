@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import IndexPage from './pages/IndexPage';
 import ResearchPage from './pages/ResearchPage';
+import AddResearchPage from './pages/addresearch';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<IndexPage />} />
           <Route path="/research" element={<ResearchPage />} />
+          <Route path="/add-research" element={<AddResearchPage />} />
         </Routes>
       </div>
     </Router>

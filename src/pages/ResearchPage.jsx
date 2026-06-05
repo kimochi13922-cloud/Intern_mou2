@@ -1,13 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const ResearchPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">ตารางข้อมูลงานวิจัย</h1>
-          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 shadow-sm">
+          <Link to="/add-research" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 shadow-sm">
               + เพิ่มงานวิจัย
-          </button>
+          </Link>
       </div>
 
       <div className="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-200">
