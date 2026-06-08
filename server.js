@@ -65,11 +65,11 @@ app.get('/api/mou_data', async (req, res) => {
 // 2. POST /api/mou_data - เพิ่มข้อมูลใหม่จากฟอร์มใน React
 app.post('/api/mou_data', async (req, res) => {
   try {
-    const { Name, Owner, Faculty, Budget, Year } = req.body;
+    const { Name, Owner, Faculty, Budget, Year, Status = 'รอดำเนินการ' } = req.body;
     
     const [result] = await dbPool.execute(
-      'INSERT INTO mou_data (Name, Owner, Faculty, Budget, Year) VALUES (?, ?, ?, ?, ?)', 
-      [Name, Owner, Faculty, Budget, Year]
+      'INSERT INTO mou_data (Name, Owner, Faculty, Budget, Year, Status) VALUES (?, ?, ?, ?, ?, ?)', 
+      [Name, Owner, Faculty, Budget, Year, Status]
     );
 
     res.status(201).json({ message: 'mou_data added successfully', id: result.insertId });
@@ -94,6 +94,46 @@ app.delete('/api/mou_data/:id', async (req, res) => {
   }
 });
 
+// 4. PATCH /api/mou_data/:id/status - อัปเดตเฉพาะ Status ของ MOU
+app.patch('/api/mou_data/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Status } = req.body;
+    if (Status === undefined) return res.status(400).json({ error: 'Status is required' });
+
+    const [result] = await dbPool.execute(
+      'UPDATE mou_data SET Status = ? WHERE ID = ?',
+      [Status, id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Row not found in mou_data' });
+    }
+    res.json({ message: 'Status updated successfully', id, Status });
+  } catch (error) {
+    console.error("Database Error:", error);
+    res.status(500).json({ error: 'Failed to update status' });
+  }
+});
+
+// 5. PUT /api/mou_data/:id - อัปเดตข้อมูล MOU ทั้งหมด
+app.put('/api/mou_data/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Name, Owner, Faculty, Budget, Year } = req.body;
+    const [result] = await dbPool.execute(
+      'UPDATE mou_data SET Name = ?, Owner = ?, Faculty = ?, Budget = ?, Year = ? WHERE ID = ?',
+      [Name, Owner, Faculty, Budget, Year, id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Row not found in mou_data' });
+    }
+    res.json({ message: 'mou_data updated successfully', id });
+  } catch (error) {
+    console.error("Database Error:", error);
+    res.status(500).json({ error: 'Failed to update mou_data' });
+  }
+});
+
 // ==== activity_data Routes ====
 
 // 3. GET /api/activity_data - ดึงข้อมูลทั้งหมดจากตาราง activity_data
@@ -110,11 +150,11 @@ app.get('/api/activity_data', async (req, res) => {
 // 4. POST /api/activity_data - เพิ่มข้อมูลใหม่เข้าตาราง activity_data
 app.post('/api/activity_data', async (req, res) => {
   try {
-    const { mouid, activities_desc, ownerid, activities, activities_pic } = req.body;
+    const { activities_desc, ownerid, activities, activities_pic } = req.body;
 
     const [result] = await dbPool.execute(
-      'INSERT INTO activity_data (mouid, activities_desc, ownerid, activities, activities_pic) VALUES (?, ?, ?, ?, ?)',
-      [mouid, activities_desc, ownerid, activities, activities_pic]
+      'INSERT INTO activity_data (activities_desc, ownerid, activities, activities_pic) VALUES (?, ?, ?, ?)',
+      [activities_desc, ownerid, activities, activities_pic]
     );
 
     res.status(201).json({ message: 'activity_data added successfully', id: result.insertId });
@@ -133,6 +173,25 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     filename: req.file.filename,
     url: `http://localhost:5000/uploads/${req.file.filename}`
   });
+});
+
+// 6. PUT /api/activity_data/:id - อัปเดตข้อมูลกิจกรรม
+app.put('/api/activity_data/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // this is mouid
+    const { activities, activities_desc } = req.body;
+    const [result] = await dbPool.execute(
+      'UPDATE activity_data SET activities = ?, activities_desc = ? WHERE mouid = ?',
+      [activities, activities_desc, id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Row not found in activity_data' });
+    }
+    res.json({ message: 'activity_data updated successfully', id });
+  } catch (error) {
+    console.error("Database Error:", error);
+    res.status(500).json({ error: 'Failed to update activity_data' });
+  }
 });
 
 // 5. DELETE /api/activity_data/:mouid - ลบแถวออกจากตาราง activity_data

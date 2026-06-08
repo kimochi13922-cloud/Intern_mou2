@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import IndexPage from './pages/IndexPage';
 import MouPage from './pages/MouPage';
 import AddMouPage from './pages/AddMouPage';
+import DetailPage from './pages/detailPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
               <Route path="/" element={<IndexPage />} />
               <Route path="/MouPage" element={<MouPage />} />
               <Route path="/add-Mou" element={<AddMouPage />} />
+              <Route path='/mouInfo' element={<DetailPage />} />
              
             </Routes>
           </div>

@@ -10,16 +10,16 @@ export const SqlProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // ดึงข้อมูลจาก Backend API (SELECT * FROM mou_data)
-  const fetchRows = async () => {
+  const fetchRows = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const response = await fetch(API_URL);
       const result = await response.json();
       setData(result);
     } catch (error) {
       console.error("Error fetching SQL data via API:", error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -37,7 +37,7 @@ export const SqlProvider = ({ children }) => {
       });
       if (response.ok) {
         // รีเฟรชข้อมูลเมื่อเพิ่มสำเร็จ
-        fetchRows(); 
+        fetchRows(true); 
       }
     } catch (error) {
       console.error("Error adding row to SQL via API:", error);
@@ -49,7 +49,7 @@ export const SqlProvider = ({ children }) => {
     try {
       const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
       if (response.ok) {
-        fetchRows(); // รีเฟรชข้อมูลเมื่อลบสำเร็จ
+        fetchRows(true); // รีเฟรชข้อมูลเมื่อลบสำเร็จ
       } else {
         console.error("Failed to delete mou_data row, status:", response.status);
       }
@@ -58,8 +58,41 @@ export const SqlProvider = ({ children }) => {
     }
   };
 
+  // อัปเดต Status ของ MOU (PATCH)
+  const updateStatus = async (id, status) => {
+    try {
+      const response = await fetch(`${API_URL}/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ Status: status }),
+      });
+      if (response.ok) {
+        await fetchRows(true); // รีเฟรชข้อมูลเมื่ออัปเดตสำเร็จ
+      } else {
+        const err = await response.json().catch(() => ({}));
+        console.error('updateStatus failed:', response.status, err);
+      }
+    } catch (error) {
+      console.error('Error updating mou status:', error);
+    }
+  };
+
+  // อัปเดตข้อมูล MOU (PUT)
+  const updateMou = async (id, data) => {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) await fetchRows(true);
+    } catch (error) {
+      console.error('Error updating mou_data:', error);
+    }
+  };
+
   return (
-    <SqlContext.Provider value={{ sqlData: data, loading, addRow, removeMou, refreshData: fetchRows }}>
+    <SqlContext.Provider value={{ sqlData: data, loading, addRow, removeMou, updateMou, updateStatus, refreshData: fetchRows }}>
       {children}
     </SqlContext.Provider>
   );
@@ -80,16 +113,16 @@ export const ActivityProvider = ({ children }) => {
   const [activityLoading, setActivityLoading] = useState(true);
 
   // ดึงข้อมูลจาก Backend API (SELECT * FROM activity_data)
-  const fetchActivities = async () => {
+  const fetchActivities = async (silent = false) => {
     try {
-      setActivityLoading(true);
+      if (!silent) setActivityLoading(true);
       const response = await fetch(ACTIVITY_API_URL);
       const result = await response.json();
       setActivityData(result);
     } catch (error) {
       console.error("Error fetching activity_data via API:", error);
     } finally {
-      setActivityLoading(false);
+      if (!silent) setActivityLoading(false);
     }
   };
 
@@ -106,7 +139,7 @@ export const ActivityProvider = ({ children }) => {
         body: JSON.stringify(newActivityData),
       });
       if (response.ok) {
-        fetchActivities(); // รีเฟรชข้อมูลเมื่อเพิ่มสำเร็จ
+        fetchActivities(true); // รีเฟรชข้อมูลเมื่อเพิ่มสำเร็จ
       }
     } catch (error) {
       console.error("Error adding row to activity_data via API:", error);
@@ -118,7 +151,7 @@ export const ActivityProvider = ({ children }) => {
     try {
       const response = await fetch(`${ACTIVITY_API_URL}/${mouid}`, { method: "DELETE" });
       if (response.ok) {
-        fetchActivities(); // รีเฟรชข้อมูลเมื่อลบสำเร็จ
+        fetchActivities(true); // รีเฟรชข้อมูลเมื่อลบสำเร็จ
       } else {
         console.error("Failed to delete activity_data row, status:", response.status);
       }
@@ -127,8 +160,22 @@ export const ActivityProvider = ({ children }) => {
     }
   };
 
+  // อัปเดตข้อมูลกิจกรรม (PUT)
+  const updateActivity = async (id, data) => {
+    try {
+      const response = await fetch(`${ACTIVITY_API_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) await fetchActivities(true);
+    } catch (error) {
+      console.error('Error updating activity_data:', error);
+    }
+  };
+
   return (
-    <ActivityContext.Provider value={{ activityData, activityLoading, addActivity, removeActivity, refreshActivities: fetchActivities }}>
+    <ActivityContext.Provider value={{ activityData, activityLoading, addActivity, removeActivity, updateActivity, refreshActivities: fetchActivities }}>
       {children}
     </ActivityContext.Provider>
   );

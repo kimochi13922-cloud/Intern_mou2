@@ -76,22 +76,22 @@ const MouPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">ตารางข้อมูล MOU</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-bold text-gray-900">ตารางข้อมูล MOU</h1>
           
-          <div className="flex gap-3">
+          <div className="flex gap-2">
               <button 
                   onClick={refreshData}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium transition duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium transition duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                  <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   รีเฟรชข้อมูล
               </button>
-              <Link to="/add-Mou" className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition duration-150 shadow-sm">
+              <Link to="/add-Mou" className="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md text-sm font-medium transition duration-150 shadow-sm">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
                   เพิ่ม MOU
               </Link>
@@ -99,8 +99,8 @@ const MouPage = () => {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 shadow-sm">
-          <div className="flex flex-col sm:flex-row gap-3">
+      <div className="bg-white rounded-lg border border-gray-200 p-3 mb-4 shadow-sm">
+          <div className="flex flex-col sm:flex-row gap-2">
               {/* Search Input */}
               <div className="relative flex-1">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -111,7 +111,7 @@ const MouPage = () => {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="ค้นหาชื่อ MOU, หรือผู้รับผิดชอบ..."
-                      className="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                      className="block w-full pl-9 pr-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                   />
               </div>
 
@@ -119,7 +119,7 @@ const MouPage = () => {
               <select
                   value={facultyFilter}
                   onChange={(e) => setFacultyFilter(e.target.value)}
-                  className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors min-w-[140px] max-w-[200px] truncate"
+                  className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors min-w-[140px] max-w-[200px] truncate"
               >
                   <option value="">คณะทั้งหมด</option>
                   {uniqueFaculties.map((faculty, index) => (
@@ -131,7 +131,7 @@ const MouPage = () => {
               <select
                   value={yearFilter}
                   onChange={(e) => setYearFilter(e.target.value)}
-                  className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors min-w-[120px]"
+                  className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors min-w-[120px]"
               >
                   <option value="">ปีทั้งหมด</option>
                   {uniqueYears.map((year, index) => (
@@ -150,19 +150,19 @@ const MouPage = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ลำดับ</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Name')}>ชื่อ MOU <SortIcon column="Name" /></th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Owner')}>ผู้รับผิดชอบ <SortIcon column="Owner" /></th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Faculty')}>คณะ <SortIcon column="Faculty" /></th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Budget')}>งบประมาณ <SortIcon column="Budget" /></th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Year')}>ปี <SortIcon column="Year" /></th>
-              <th scope="col" className="relative px-6 py-3"><span className="sr-only">Edit</span></th>
+              <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ลำดับ</th>
+              <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Name')}>ชื่อ MOU <SortIcon column="Name" /></th>
+              <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Owner')}>ผู้รับผิดชอบ <SortIcon column="Owner" /></th>
+              <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Faculty')}>คณะ <SortIcon column="Faculty" /></th>
+              <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Budget')}>งบประมาณ <SortIcon column="Budget" /></th>
+              <th scope="col" className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Year')}>ปี <SortIcon column="Year" /></th>
+              <th scope="col" className="relative px-4 py-2"><span className="sr-only">Edit</span></th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {loading ? (
                <tr>
-                 <td colSpan="8" className="px-6 py-12 text-center">
+                 <td colSpan="8" className="px-4 py-8 text-center">
                    <div className="flex justify-center items-center">
                       <svg className="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -178,13 +178,13 @@ const MouPage = () => {
                 
                 return (
                   <tr key={item.ID || index} className="hover:bg-gray-50 transition duration-150">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">{item.Name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.Owner}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.Faculty}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">฿{budgetNum.toLocaleString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.Year}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
+                    <td className="px-4 py-2.5 text-sm text-gray-900 font-medium">{item.Name}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500">{item.Owner}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500">{item.Faculty}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500">฿{budgetNum.toLocaleString()}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500">{item.Year}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap text-right text-sm font-medium">
                       <a href="#" onClick={(e) => { e.preventDefault(); routIdInfo(navigate, item.ID); }} className="text-indigo-600 hover:text-indigo-900 cursor-pointer">ดูรายละเอียด</a>
                     </td>
                   </tr>
@@ -192,7 +192,7 @@ const MouPage = () => {
               })
             ) : (
               <tr>
-                <td colSpan="8" className="px-6 py-12 text-center">
+                <td colSpan="8" className="px-4 py-8 text-center">
                   <svg className="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                   <p className="text-gray-500 font-medium">
                     {sqlData && sqlData.length === 0 ? "ยังไม่มีข้อมูล MOU ในฐานข้อมูล" : "ไม่พบข้อมูลที่ค้นหา"}
