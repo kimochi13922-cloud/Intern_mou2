@@ -1,22 +1,27 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { SqlProvider, ActivityProvider } from './sql_connect';
 import Navbar from './components/Navbar';
 import IndexPage from './pages/IndexPage';
-import ResearchPage from './pages/ResearchPage';
-import AddResearchPage from './pages/addresearch';
+import MouPage from './pages/MouPage';
+import AddMouPage from './pages/AddMouPage';
 
 function App() {
   return (
-    <Router>
-      <div className="bg-gray-50 text-gray-900 antialiased min-h-screen">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<IndexPage />} />
-          <Route path="/research" element={<ResearchPage />} />
-          <Route path="/add-research" element={<AddResearchPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <SqlProvider>
+      <ActivityProvider>
+        <Router>
+          <div className="bg-gray-50 text-gray-900 antialiased min-h-screen">
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<IndexPage />} />
+              <Route path="/MouPage" element={<MouPage />} />
+              <Route path="/add-Mou" element={<AddMouPage />} />
+             
+            </Routes>
+          </div>
+        </Router>
+      </ActivityProvider>
+    </SqlProvider>
   );
 }
 
