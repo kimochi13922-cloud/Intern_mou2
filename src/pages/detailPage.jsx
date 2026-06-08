@@ -293,30 +293,55 @@ const AddActivityForm = ({ mouId, onSaved, onCancel }) => {
 // The step `key` (e.g. 'proposal', 'collect', ...) is what gets saved
 // in the mou_data.Status column.  doneCount = index of the active step + 1.
 
-const TIMELINE_STEPS = [
-  { key: 'proposal', label: 'อนุมัติโครงการ',   desc: 'โครงการได้รับการอนุมัติและจัดสรรงบประมาณ' },
-  { key: 'collect',  label: 'เก็บรวบรวมข้อมูล', desc: 'ดำเนินการเก็บข้อมูลและทดลองตามแผนงาน' },
-  { key: 'analyze',  label: 'วิเคราะห์ผล',       desc: 'วิเคราะห์ข้อมูลและสรุปผลการวิจัย' },
-  { key: 'report',   label: 'จัดทำรายงาน',       desc: 'จัดทำรายงานฉบับสมบูรณ์และเผยแพร่' },
-  { key: 'complete', label: 'เสร็จสิ้น',         desc: 'ปิดโครงการและส่งมอบผลงาน' },
-];
-
-// step key  →  how many steps are "done"
-// null / unknown → 0  (no step completed yet)
-const keyToDone = (key) => {
-  const idx = TIMELINE_STEPS.findIndex((s) => s.key === key);
-  return idx >= 0 ? idx + 1 : 0;
-};
-
-const ProgressCard = ({ mouId, status }) => {
+const ProgressCard = ({ mouId, status, country_check }) => {
   const { updateStatus } = useSql();
   const [saving, setSaving] = useState(false);
 
+  const TIMELINE_STEPS_INSIDE = [
+    { key: 'approval', label: 'นำเข้าพิจารณาในที่ประชุม',    },
+    { key: 'submit',  label: 'เสนอต่อกองกฎหมาย',  },
+    { key: 'analyze',  label: 'เสนอต่อที่ประชุมคณะกรรมการบริหารมหาวิทยาลัยนเรศวร',        },
+    { key: 'accept',   label: 'ผ่านมติคณะกรรมการบริหารมหาวิทยาลัย',        },
+    { key: 'edit', label: 'ส่งกลับคณะเพื่อแก้ไข',          },
+    { key: 'sign', label: 'ลงนาม',          }
+  ];
+
+  const TIMELINE_STEPS_OUTSIDE = [
+    // TODO: Edit these steps for Outside
+    { key: 'approval_out', label: 'นำเข้าพิจารณาในที่ประชุมประจำคณะฯ',    },
+    { key: 'submit_out',  label: 'ส่งต่อไปยังกองพัฒนาภาษาและกิจการต่างประเทศ',  },
+    { key: 'edit_out', label: 'ส่งกลับคณะแก้ไข (ถ้ามี)',},
+    {  key: 'legal_out', label: 'ส่งต่อไปยังกองกฎหมายเพื่อพิจาณา', },
+    { key: 'manager_out', label: 'เสนอในที่ประชุมคณะกรรมการบริหารมหาวิทยาลัยนเรศวร',},
+    {  key: 'council_out', label: 'เสนอในที่ประชุมคณะกรรมการสภามหาวิทยาลัย', },
+    {  key: 'sign_out', label: 'ลงนาม', }
+  ];
+
+  const TIMELINE_STEPS_INSIDE_SPECIAL = [
+    { key: 'approval_special', label: 'นำเข้าพิจารณาในที่ประชุม',    },
+    { key: 'submit_special',  label: 'เสนอต่อกองกฎหมาย',  },
+    { key: 'edit_special', label: 'ส่งกลับคณะเพื่อแก้ไข',},
+    { key: 'sign_special', label: 'ลงนาม',},
+    { key: 'notice_special', label: 'แจ้งมติคณะกรรมการบริหารมหาวิทยาลัย',}
+
+  ];
+
+  let TIMELINE_STEPS = TIMELINE_STEPS_INSIDE; // Default to INSIDE
+  if (country_check === 'Inside') {
+    TIMELINE_STEPS = TIMELINE_STEPS_INSIDE;
+  } else if (country_check === 'Outside') {
+    TIMELINE_STEPS = TIMELINE_STEPS_OUTSIDE;
+  } else if (country_check === 'InsideSpecial') {
+    TIMELINE_STEPS = TIMELINE_STEPS_INSIDE_SPECIAL;
+  }
+
   // debug: show what value is coming from DB
-  console.log('[ProgressCard] mouId=', mouId, 'status=', status);
+  console.log('[ProgressCard] mouId=', mouId, 'status=', status, 'country_check=', country_check);
 
   // doneCount comes from whatever key is stored in mou_data.Status
-  const doneCount = keyToDone(status);
+  const doneCount = TIMELINE_STEPS.findIndex((s) => s.key === status) >= 0 
+    ? TIMELINE_STEPS.findIndex((s) => s.key === status) + 1 
+    : 0;
   const pct = Math.round((doneCount / TIMELINE_STEPS.length) * 100);
 
   const markStep = async (idx) => {
@@ -484,7 +509,8 @@ const DetailPage = () => {
   const params = new URLSearchParams(location.search);
   const id = parseInt(params.get('id'));
 
-  const mou = (sqlData || []).find((r) => r.ID === id);
+  const safeSqlData = Array.isArray(sqlData) ? sqlData : [];
+  const mou = safeSqlData.find((r) => r.ID === id);
   const activities = (activityData || []).filter((a) => Number(a.ownerid) === id);
 
   // ── Loading state ──
@@ -521,7 +547,6 @@ const DetailPage = () => {
     );
   }
 
-  const budgetNum = Number(mou.Budget) || 0;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -603,7 +628,11 @@ const DetailPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-start">
 
         {/* LEFT — Progress Timeline: reads mou.Status (step key) from DB, saves back on click */}
-        <ProgressCard mouId={mou.ID} status={mou.Status ?? mou.status ?? ''} />
+        <ProgressCard 
+          mouId={mou.ID} 
+          status={mou.Status ?? mou.status ?? ''} 
+          country_check={mou.country_check ?? mou.Country_Check ?? ''} 
+        />
 
         {/* RIGHT — Info Card */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
@@ -611,7 +640,7 @@ const DetailPage = () => {
           <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-gray-50">
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">รายละเอียด</span>
             <button
-              onClick={() => { setInfoForm({ Name: mou.Name, Owner: mou.Owner || '', Faculty: mou.Faculty || '', Budget: String(mou.Budget || ''), Year: String(mou.Year || '') }); setEditInfo(true); }}
+              onClick={() => { setInfoForm({ Name: mou.Name, Owner: mou.Owner || '', Faculty: mou.Faculty || '', Year: String(mou.Year || ''), country_check: mou.country_check ?? mou.Country_Check ?? 'Inside' }); setEditInfo(true); }}
               className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -632,18 +661,23 @@ const DetailPage = () => {
                 <label className="text-xs text-gray-400 mb-1 block">คณะ</label>
                 <input type="text" value={infoForm.Faculty} onChange={(e) => setInfoForm((f) => ({ ...f, Faculty: e.target.value }))} className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               </div>
-              <div>
-                <label className="text-xs text-gray-400 mb-1 block">งบประมาณ</label>
-                <input type="text" value={infoForm.Budget} onChange={(e) => setInfoForm((f) => ({ ...f, Budget: e.target.value }))} className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-              </div>
+
               <div>
                 <label className="text-xs text-gray-400 mb-1 block">ปีงบประมาณ</label>
                 <input type="number" value={infoForm.Year} onChange={(e) => setInfoForm((f) => ({ ...f, Year: e.target.value }))} className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">ประเภท (Inside/Outside)</label>
+                <select value={infoForm.country_check} onChange={(e) => setInfoForm((f) => ({ ...f, country_check: e.target.value }))} className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                  <option value="Inside">ภายในประเทศ (Inside)</option>
+                  <option value="InsideSpecial">ภายในประเทศ ลักษณะฉพาะกิจ</option>
+                  <option value="Outside">ต่างประเทศ (Outside)</option>
+                </select>
+              </div>
               <div className="flex gap-2 justify-end pt-1">
                 <button onClick={() => setEditInfo(false)} className="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">ยกเลิก</button>
                 <button
-                  onClick={async () => { setSavingInfo(true); try { await updateMou(mou.ID, { Name: infoForm.Name, Owner: infoForm.Owner, Faculty: infoForm.Faculty, Budget: parseFloat(infoForm.Budget), Year: infoForm.Year }); setEditInfo(false); } finally { setSavingInfo(false); } }}
+                  onClick={async () => { setSavingInfo(true); try { await updateMou(mou.ID, { Name: infoForm.Name, Owner: infoForm.Owner, Faculty: infoForm.Faculty, Year: infoForm.Year, country_check: infoForm.country_check }); setEditInfo(false); } finally { setSavingInfo(false); } }}
                   disabled={savingInfo}
                   className="text-sm px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors disabled:opacity-60"
                 >
@@ -662,13 +696,16 @@ const DetailPage = () => {
                 <p className="text-xs text-gray-400 mb-1">คณะ</p>
                 <p className="text-sm font-medium text-gray-800">{mou.Faculty || '—'}</p>
               </div>
-              <div className="px-5 py-4">
-                <p className="text-xs text-gray-400 mb-1">งบประมาณ</p>
-                <p className="text-sm font-medium text-gray-800">฿{budgetNum.toLocaleString()}</p>
-              </div>
+
               <div className="px-5 py-4">
                 <p className="text-xs text-gray-400 mb-1">ปีงบประมาณ</p>
                 <p className="text-sm font-medium text-gray-800">พ.ศ. {mou.Year}</p>
+              </div>
+              <div className="px-5 py-4">
+                <p className="text-xs text-gray-400 mb-1">ประเภท</p>
+                <p className="text-sm font-medium text-gray-800">
+                  {(mou.country_check ?? mou.Country_Check) === 'InsideSpecial' ? 'ภายในประเทศ ลักษณะเฉพาะกิจ' : ((mou.country_check ?? mou.Country_Check) === 'Outside' ? 'ต่างประเทศ (Outside)' : 'ภายในประเทศ (Inside)')}
+                </p>
               </div>
             </div>
           )}

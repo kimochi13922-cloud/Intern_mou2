@@ -5,7 +5,7 @@ import { useSql } from '../sql_connect';
 const AddMouPage = () => {
     const navigate = useNavigate();
     const { addRow } = useSql();
-    const [formData, setFormData] = useState({ Name: '', Owner: '', Faculty: '', Budget: '', Year: '' });
+    const [formData, setFormData] = useState({ Name: '', Owner: '', Faculty: '', Year: '', country_check: 'Inside' });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,8 +15,9 @@ const AddMouPage = () => {
             Name: formData.Name,
             Owner: formData.Owner,
             Faculty: formData.Faculty,
-            Budget: parseFloat(formData.Budget),
-            Year: formData.Year
+
+            Year: formData.Year,
+            country_check: formData.country_check
         };
 
         // 2. Add to MariaDB via Context -> Backend
@@ -50,10 +51,7 @@ const AddMouPage = () => {
                             <input type="text" id="author" placeholder="ระบุชื่อผู้รับผิดชอบ" value={formData.Owner} onChange={(e) => setFormData({...formData, Owner: e.target.value})} className="mt-1 block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" required />
                         </div>
 
-                        <div>
-                            <label htmlFor="budget" className="block text-sm font-medium text-gray-700">งบประมาณ (บาท)</label>
-                            <input type="number" id="budget" placeholder="เช่น 500000" value={formData.Budget} onChange={(e) => setFormData({...formData, Budget: e.target.value})} className="mt-1 block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" required />
-                        </div>
+
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -65,6 +63,17 @@ const AddMouPage = () => {
                         <div>
                             <label htmlFor="year" className="block text-sm font-medium text-gray-700">ปี (พ.ศ.)</label>
                             <input type="text" id="year" placeholder="เช่น 2569" value={formData.Year} onChange={(e) => setFormData({...formData, Year: e.target.value})} className="mt-1 block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" required />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                        <div>
+                            <label htmlFor="country_check" className="block text-sm font-medium text-gray-700">ประเภท MOU (ภายใน/ต่างประเทศ)</label>
+                            <select id="country_check" value={formData.country_check} onChange={(e) => setFormData({...formData, country_check: e.target.value})} className="mt-1 block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
+                                <option value="Inside">ภายในประเทศ (Inside)</option>
+                                <option value="InsideSpecial">ภายในประเทศ ลักษณะเฉพาะกิจ</option>
+                                <option value="Outside">ต่างประเทศ (Outside)</option>
+                            </select>
                         </div>
                     </div>
                     

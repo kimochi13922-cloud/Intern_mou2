@@ -65,11 +65,11 @@ app.get('/api/mou_data', async (req, res) => {
 // 2. POST /api/mou_data - เพิ่มข้อมูลใหม่จากฟอร์มใน React
 app.post('/api/mou_data', async (req, res) => {
   try {
-    const { Name, Owner, Faculty, Budget, Year, Status = 'รอดำเนินการ' } = req.body;
+    const { Name, Owner, Faculty, Year, Status = 'รอดำเนินการ', country_check = 'Inside' } = req.body;
     
     const [result] = await dbPool.execute(
-      'INSERT INTO mou_data (Name, Owner, Faculty, Budget, Year, Status) VALUES (?, ?, ?, ?, ?, ?)', 
-      [Name, Owner, Faculty, Budget, Year, Status]
+      'INSERT INTO mou_data (Name, Owner, Faculty, Year, Status, country_check) VALUES (?, ?, ?, ?, ?, ?)', 
+      [Name, Owner, Faculty, Year, Status, country_check]
     );
 
     res.status(201).json({ message: 'mou_data added successfully', id: result.insertId });
@@ -119,10 +119,10 @@ app.patch('/api/mou_data/:id/status', async (req, res) => {
 app.put('/api/mou_data/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { Name, Owner, Faculty, Budget, Year } = req.body;
+    const { Name, Owner, Faculty, Year, country_check } = req.body;
     const [result] = await dbPool.execute(
-      'UPDATE mou_data SET Name = ?, Owner = ?, Faculty = ?, Budget = ?, Year = ? WHERE ID = ?',
-      [Name, Owner, Faculty, Budget, Year, id]
+      'UPDATE mou_data SET Name = ?, Owner = ?, Faculty = ?, Year = ?, country_check = ? WHERE ID = ?',
+      [Name, Owner, Faculty, Year, country_check, id]
     );
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Row not found in mou_data' });

@@ -7,8 +7,9 @@ const IndexPage = () => {
   const { sqlData, loading } = useSql();
   
   // Calculate statistics
-  const totalMOU = sqlData ? sqlData.length : 0;
-  const uniqueFaculties = sqlData ? new Set(sqlData.map(item => item.Faculty).filter(Boolean)).size : 0;
+  const safeSqlData = Array.isArray(sqlData) ? sqlData : [];
+  const totalMOU = safeSqlData.length;
+  const uniqueFaculties = new Set(safeSqlData.map(item => item.Faculty).filter(Boolean)).size;
   return (
     <>
       <section className="hero-bg relative overflow-hidden py-20 md:py-28">
