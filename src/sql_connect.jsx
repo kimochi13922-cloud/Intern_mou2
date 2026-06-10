@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 const SqlContext = createContext();
 
 // เปลี่ยน URL เป็น API ของ Backend (Node.js/PHP/Python) ที่เชื่อมต่อกับ SQL Database
-export const API_URL = "http://localhost:5000/api/mou_data"; 
+export const API_URL = `http://${window.location.hostname}:5000/api/mou_data`; 
 
 export const SqlProvider = ({ children }) => {
   const [data, setData] = useState([]);
@@ -104,7 +104,7 @@ export const useSql = () => useContext(SqlContext);
 // ==== activity_data Context ====
 // ================================================================
 
-const ACTIVITY_API_URL = "http://localhost:5000/api/activity_data";
+const ACTIVITY_API_URL = `http://${window.location.hostname}:5000/api/activity_data`;
 
 const ActivityContext = createContext();
 

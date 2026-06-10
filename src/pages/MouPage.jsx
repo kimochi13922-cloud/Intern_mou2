@@ -345,7 +345,7 @@ const MouPage = () => {
                       </div>
                     </td>
                     <td className="px-4 py-2.5 whitespace-nowrap text-center text-sm font-medium">
-                      <a href="#" onClick={(e) => { e.preventDefault(); routIdInfo(navigate, item.ID); }} className="text-indigo-600 hover:text-indigo-900 cursor-pointer">ดูรายละเอียด</a>
+                      <button onClick={(e) => { e.preventDefault(); routIdInfo(navigate, item.ID); }} className="text-indigo-600 hover:text-indigo-900 cursor-pointer">ดูรายละเอียด</button>
                     </td>
                   </tr>
                 );

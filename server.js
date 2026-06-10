@@ -377,7 +377,7 @@ app.delete('/api/activity_data/:mouid', async (req, res) => {
 
 // ==== Start Server ====
 const PORT = 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0' ,() => {
   console.log(`🚀 Backend server (API) is running on http://localhost:${PORT}`);
   console.log(`✅ Ready to link with your React app!`);
   console.log(`❗ Make sure your MariaDB server is running and database 'test' has a table named 'mou_data'!`);

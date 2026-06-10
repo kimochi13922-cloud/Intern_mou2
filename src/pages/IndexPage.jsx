@@ -1,16 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSql, useActivity } from '../sql_connect';
 
 
 const IndexPage = () => {
-  const { sqlData, loading: sqlLoading } = useSql();
-  const { activityData, activityLoading } = useActivity();
+  const { sqlData, loading: sqlLoading, refreshData } = useSql();
+  const { activityData, activityLoading, refreshActivities } = useActivity();
   
   const loading = sqlLoading || activityLoading;
+  const [mapError, setMapError] = useState(null);
+  
+  const handleRefresh = () => {
+    refreshData();
+    refreshActivities();
+  };
   
   // Calculate statistics
-  const safeSqlData = Array.isArray(sqlData) ? sqlData : [];
+  const safeSqlData = React.useMemo(() => Array.isArray(sqlData) ? sqlData : [], [sqlData]);
   const totalMOU = safeSqlData.length;
   const uniqueInstitutions = new Set(safeSqlData.map(item => item.institution).filter(Boolean)).size;
   
@@ -20,25 +26,25 @@ const IndexPage = () => {
   const { nationCounts, topCountries } = React.useMemo(() => {
     // Map common Thai/English names to ISO 2-letter codes for Highcharts
     const map = {
-      'thailand': 'th', 'ไทย': 'th', 'ประเทศไทย': 'th',
-      'usa': 'us', 'สหรัฐอเมริกา': 'us', 'united states': 'us', 'สหรัฐ': 'us',
-      'japan': 'jp', 'ญี่ปุ่น': 'jp', 'ประเทศญี่ปุ่น': 'jp',
-      'china': 'cn', 'จีน': 'cn', 'ประเทศจีน': 'cn',
-      'australia': 'au', 'ออสเตรเลีย': 'au', 'ประเทศออสเตรเลีย': 'au',
-      'austria': 'at', 'ออสเตรีย': 'at', 'ประเทศออสเตรีย': 'at',
+      'ไทย': 'th', 'ประเทศไทย': 'th',
+      'usa': 'us', 'สหรัฐอเมริกา': 'us', 'สหรัฐ': 'us',
+      'ญี่ปุ่น': 'jp', 'ประเทศญี่ปุ่น': 'jp',
+      'จีน': 'cn', 'ประเทศจีน': 'cn',
+      'ออสเตรเลีย': 'au', 'ประเทศออสเตรเลีย': 'au',
+      'ออสเตรีย': 'at', 'ประเทศออสเตรีย': 'at',
       'uk': 'gb', 'england': 'gb', 'อังกฤษ': 'gb', 'ประเทศอังกฤษ': 'gb', 'สหราชอาณาจักร': 'gb',
-      'france': 'fr', 'ฝรั่งเศส': 'fr', 'ประเทศฝรั่งเศส': 'fr',
-      'germany': 'de', 'เยอรมนี': 'de', 'เยอรมัน': 'de', 'ประเทศเยอรมนี': 'de',
-      'south korea': 'kr', 'korea': 'kr', 'เกาหลีใต้': 'kr', 'ประเทศเกาหลีใต้': 'kr',
-      'taiwan': 'tw', 'ไต้หวัน': 'tw', 'ประเทศไต้หวัน': 'tw',
-      'singapore': 'sg', 'สิงคโปร์': 'sg', 'ประเทศสิงคโปร์': 'sg',
-      'malaysia': 'my', 'มาเลเซีย': 'my', 'ประเทศมาเลเซีย': 'my',
-      'vietnam': 'vn', 'เวียดนาม': 'vn', 'ประเทศเวียดนาม': 'vn',
-      'indonesia': 'id', 'อินโดนีเซีย': 'id', 'ประเทศอินโดนีเซีย': 'id',
-      'philippines': 'ph', 'ฟิลิปปินส์': 'ph', 'ประเทศฟิลิปปินส์': 'ph',
-      'india': 'in', 'อินเดีย': 'in', 'ประเทศอินเดีย': 'in',
-      'new zealand': 'nz', 'นิวซีแลนด์': 'nz', 'ประเทศนิวซีแลนด์': 'nz',
-      'canada': 'ca', 'แคนาดา': 'ca', 'ประเทศแคนาดา': 'ca',
+      'ฝรั่งเศส': 'fr', 'ประเทศฝรั่งเศส': 'fr',
+      'เยอรมนี': 'de', 'เยอรมัน': 'de', 'ประเทศเยอรมนี': 'de',
+      'korea': 'kr', 'เกาหลีใต้': 'kr', 'ประเทศเกาหลีใต้': 'kr',
+      'ไต้หวัน': 'tw', 'ประเทศไต้หวัน': 'tw',
+      'สิงคโปร์': 'sg', 'ประเทศสิงคโปร์': 'sg',
+      'มาเลเซีย': 'my', 'ประเทศมาเลเซีย': 'my',
+      'เวียดนาม': 'vn', 'ประเทศเวียดนาม': 'vn',
+      'อินโดนีเซีย': 'id', 'ประเทศอินโดนีเซีย': 'id',
+      'ฟิลิปปินส์': 'ph', 'ประเทศฟิลิปปินส์': 'ph',
+      'อินเดีย': 'in', 'ประเทศอินเดีย': 'in',
+      'นิวซีแลนด์': 'nz', 'ประเทศนิวซีแลนด์': 'nz',
+      'แคนาดา': 'ca', 'ประเทศแคนาดา': 'ca',
       'กัมพูชา': 'kh', 'เนเธอร์แลนด์': 'nl', 'บรูไน': 'bn',
       'พม่า': 'mm', 'เมียนมา': 'mm', 'รัสเซีย': 'ru', 'ลาว': 'la',
       'สเปน': 'es', 'สวิตเซอร์แลนด์': 'ch', 'สวีเดน': 'se',
@@ -204,41 +210,67 @@ const IndexPage = () => {
 
   const totalNations = topCountries.length;
 
+  const mapRef = useRef(null);
+
   useEffect(() => {
-    // Only run if Highcharts is loaded and we have data
-    if (!window.Highcharts || loading) return;
+    // Only run if Highcharts is loaded, we have data, and the ref is ready
+    if (!window.Highcharts || loading || !mapRef.current) return;
+
+    let chart;
+    let isMounted = true;
 
     const seriesData = Object.entries(nationCounts).map(([code, count]) => ({
       code: code.toUpperCase(),
       value: count
     }));
 
-    window.Highcharts.mapChart('map-container', {
-      chart: { map: 'custom/world' },
-      title: { text: 'MOU/MOA/LOI/LOA International Partners Maps' },
-      mapNavigation: {
-          enabled: true,
-          buttonOptions: {
-              verticalAlign: 'bottom'
-          }
-      },
-      colorAxis: {
-          
-          min: 1,
-          minColor: '#E6F0FA',
-          maxColor: '#003366'
-      },
-      series: [{
-          data: seriesData,
-          joinBy: ['iso-a2', 'code'],
-          name: 'จำนวน MOU',
-          states: {
-              hover: { color: '#BADA55' }
-          }
-      }],
-      credits: { enabled: false }
-    });
+    (async () => {
+      try {
+        const topology = await fetch('world.topo.json').then(r => {
+            if (!r.ok) throw new Error("HTTP error " + r.status);
+            return r.json();
+        });
+        
+        if (!isMounted || !mapRef.current) return;
 
+        chart = window.Highcharts.mapChart(mapRef.current, {
+          chart: { map: topology },
+          title: { text: 'MOU/MOA/LOI/LOA International Partners Maps' },
+          accessibility: { enabled: false },
+          mapNavigation: {
+              enabled: true,
+              buttonOptions: {
+                  verticalAlign: 'bottom'
+              }
+          },
+          colorAxis: {
+              min: 1,
+              minColor: '#E6F0FA',
+              maxColor: '#003366'
+          },
+          series: [{
+              data: seriesData,
+              joinBy: ['iso-a2', 'code'],
+              name: 'จำนวน MOU',
+              states: {
+                  hover: { color: '#BADA55' }
+              }
+          }],
+          credits: { enabled: false }
+        });
+      } catch (err) {
+        console.error("Error loading Highcharts map topology:", err);
+        setMapError(err.toString());
+      }
+    })();
+
+    // Cleanup function to destroy the chart when component unmounts or re-renders
+    return () => {
+      isMounted = false;
+      if (chart) {
+        chart.destroy();
+      }
+    };
   }, [nationCounts, loading]);
 
   return (
@@ -315,8 +347,23 @@ const IndexPage = () => {
       <section className="bg-gray-50 border-t border-gray-100 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className="lg:col-span-3 bg-white p-4 rounded-2xl shadow-sm border border-gray-200 fade-up">
-              <div id="map-container" style={{ height: '500px', width: '100%' }}></div>
+            <div className="lg:col-span-3 bg-white p-4 rounded-2xl shadow-sm border border-gray-200 fade-up relative">
+              <button 
+                onClick={handleRefresh}
+                disabled={loading}
+                className="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium transition duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                รีโหลดข้อมูล
+              </button>
+              {mapError && (
+                  <div className="absolute inset-0 bg-white/90 z-20 flex items-center justify-center text-red-600 font-bold p-4 text-center rounded-2xl">
+                      Failed to load map data: {mapError}
+                  </div>
+              )}
+              <div ref={mapRef} style={{ height: '500px', width: '100%' }}></div>
             </div>
             
             {/* ================= COUNTRY LIST ================= */}
