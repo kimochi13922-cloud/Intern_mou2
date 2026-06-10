@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('admin');
     const [password, setPassword] = useState('admin');
-    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();

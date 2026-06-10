@@ -209,7 +209,7 @@ const ActivityCard = ({ activity }) => {
 
             <div className="flex gap-2 justify-end mt-2">
               <button
-                onClick={() => { setEditing(false); setForm({ activities: activity.activities || '', activities_desc: activity.activities_desc || '' }); }}
+                onClick={() => { setEditing(false); setForm({ activities: activity.activities || '', activities_desc: activity.activities_desc || '', activities_type: activity.activities_type || '', activities_service: activity.activities_service || '', activities_category: activity.activities_category || '', activities_date: activity.activities_date || '', activities_budget: activity.activities_budget || '' }); }}
                 className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 ยกเลิก
@@ -833,9 +833,7 @@ const ProgressCard = ({ mou }) => {
                     )}
                   </div>
                 )}
-                <p className={`text-xs leading-relaxed mt-1 ${isDone ? 'text-gray-500' : 'text-gray-400'}`}>
-                  {step.desc}
-                </p>
+
               </div>
             </li>
           );

@@ -1,9 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 
 const app = express();
 
@@ -11,32 +8,6 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' })); // Parses JSON bodies with increased limit for base64 BLOBs
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-// ==== File Upload Setup (multer) ====
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR); // สร้างโฟลเดอร์ถ้ายังไม่มี
-
-// เสิร์ฟไฟล์รูปภาพจากโฟลเดอร์ uploads
-app.use('/uploads', express.static(UPLOADS_DIR));
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
-  filename: (req, file, cb) => {
-    // เก็บชื่อไฟล์เป็น timestamp + ชื่อเดิม เพื่อหลีกเลี่ยงชื่อซ้ำ
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e6);
-    cb(null, unique + path.extname(file.originalname));
-  }
-});
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // จำกัดขนาดไฟล์ที่ 5 MB
-  fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif|webp/;
-    const ok = allowed.test(path.extname(file.originalname).toLowerCase())
-             && allowed.test(file.mimetype);
-    ok ? cb(null, true) : cb(new Error('Only image files are allowed!'));
-  }
-});
 
 // ==== MySQL / MariaDB Database Connection Setup ====
 // เชื่อมต่อกับฐานข้อมูล test ใน MariaDB
@@ -50,9 +21,9 @@ const dbPool = mysql.createPool({
   queueLimit: 0
 });
 
-// ==== Routes ====
+// ==== mou_data Routes ====
 
-// 1. GET /api/mou_data - ดึงข้อมูลทั้งหมดไปแสดงผลใน React
+// GET /api/mou_data - ดึงข้อมูลทั้งหมดไปแสดงผลใน React
 app.get('/api/mou_data', async (req, res) => {
   try {
     const [rows] = await dbPool.execute(`
@@ -71,7 +42,7 @@ app.get('/api/mou_data', async (req, res) => {
   }
 });
 
-// 1.1 GET /api/mou_data/:id/pdf - ดึงไฟล์ PDF เฉพาะเมื่อต้องการดู
+// GET /api/mou_data/:id/pdf - ดึงไฟล์ PDF เฉพาะเมื่อต้องการดู
 app.get('/api/mou_data/:id/pdf', async (req, res) => {
   try {
     const { id } = req.params;
@@ -106,7 +77,7 @@ app.get('/api/mou_data/:id/pdf', async (req, res) => {
   }
 });
 
-// 2. POST /api/mou_data - เพิ่มข้อมูลใหม่จากฟอร์มใน React
+// POST /api/mou_data - เพิ่มข้อมูลใหม่จากฟอร์มใน React
 app.post('/api/mou_data', async (req, res) => {
   try {
     const { 
@@ -138,7 +109,7 @@ app.post('/api/mou_data', async (req, res) => {
   }
 });
 
-// 3. DELETE /api/mou_data/:id - ลบแถวออกจากตาราง mou_data
+// DELETE /api/mou_data/:id - ลบแถวออกจากตาราง mou_data
 app.delete('/api/mou_data/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -156,7 +127,7 @@ app.delete('/api/mou_data/:id', async (req, res) => {
   }
 });
 
-// 4. PATCH /api/mou_data/:id/status - อัปเดตเฉพาะ Status ของ MOU
+// PATCH /api/mou_data/:id/status - อัปเดตเฉพาะ Status ของ MOU
 app.patch('/api/mou_data/:id/status', async (req, res) => {
   try {
     const { id } = req.params;
@@ -178,7 +149,7 @@ app.patch('/api/mou_data/:id/status', async (req, res) => {
   }
 });
 
-// 5. PUT /api/mou_data/:id - อัปเดตข้อมูล MOU ทั้งหมด
+// PUT /api/mou_data/:id - อัปเดตข้อมูล MOU ทั้งหมด
 app.put('/api/mou_data/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -247,7 +218,7 @@ app.put('/api/mou_data/:id', async (req, res) => {
 
 // ==== activity_data Routes ====
 
-// 3. GET /api/activity_data - ดึงข้อมูลทั้งหมดจากตาราง activity_data
+// GET /api/activity_data - ดึงข้อมูลทั้งหมดจากตาราง activity_data
 app.get('/api/activity_data', async (req, res) => {
   try {
     const [rows] = await dbPool.execute('SELECT * FROM activity_data ORDER BY mouid DESC');
@@ -267,7 +238,7 @@ app.get('/api/activity_data', async (req, res) => {
   }
 });
 
-// 4. POST /api/activity_data - เพิ่มข้อมูลใหม่เข้าตาราง activity_data
+// POST /api/activity_data - เพิ่มข้อมูลใหม่เข้าตาราง activity_data
 app.post('/api/activity_data', async (req, res) => {
   try {
     const { 
@@ -302,18 +273,7 @@ app.post('/api/activity_data', async (req, res) => {
   }
 });
 
-// 6. POST /api/upload - อัปโหลดรูปภาพไปยังโฟลเดอร์ uploads
-// ส่งคืนชื่อไฟล์ที่บันทึกไว้ เพื่อนำไปเก็บใน activities_pic ของ activity_data
-app.post('/api/upload', upload.single('image'), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  // คืนชื่อไฟล์ที่บันทึก เช่น "1717123456789-123456.jpg"
-  res.json({
-    filename: req.file.filename,
-    url: `http://localhost:5000/uploads/${req.file.filename}`
-  });
-});
-
-// 6. PUT /api/activity_data/:id - อัปเดตข้อมูลกิจกรรม
+// PUT /api/activity_data/:id - อัปเดตข้อมูลกิจกรรม
 app.put('/api/activity_data/:id', async (req, res) => {
   try {
     const { id } = req.params; // this is mouid
@@ -360,7 +320,7 @@ app.put('/api/activity_data/:id', async (req, res) => {
   }
 });
 
-// 5. DELETE /api/activity_data/:mouid - ลบแถวออกจากตาราง activity_data
+// DELETE /api/activity_data/:mouid - ลบแถวออกจากตาราง activity_data
 app.delete('/api/activity_data/:mouid', async (req, res) => {
   try {
     const { mouid } = req.params;
