@@ -19,8 +19,18 @@ const Navbar = () => {
                             <Link to="/MouPage" className={`inline-flex items-center px-4 pt-1 border-b-2 text-sm font-medium transition duration-150 ${location.pathname === '/Mou' ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
                                 จัดการ MOU
                             </Link>
-
                         </div>
+                    </div>
+                    <div className="flex">
+                        {localStorage.getItem('auth') === 'true' ? (
+                            <button onClick={() => { localStorage.removeItem('auth'); window.location.href = '/'; }} className="inline-flex items-center px-4 pt-1 border-b-2 text-sm font-medium transition duration-150 border-transparent text-gray-500 hover:text-red-600 hover:border-red-300">
+                                ออกจากระบบ
+                            </button>
+                        ) : (
+                            <Link to="/login" className={`inline-flex items-center px-4 pt-1 border-b-2 text-sm font-medium transition duration-150 ${location.pathname === '/login' ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
+                                เข้าสู่ระบบ
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

@@ -66,10 +66,11 @@ const MouPage = () => {
   const navigate = useNavigate();
   const { sqlData, loading, refreshData } = useSql();
   const [searchTerm, setSearchTerm] = useState('');
-  const [yearFilter, setYearFilter] = useState('');
-  const [facultyFilter, setFacultyFilter] = useState('');
-  const [sortKey, setSortKey] = useState(null);      // 'code' | 'title' | 'author' | 'faculty' | 'year'
-  const [sortDir, setSortDir] = useState('asc');      // 'asc' | 'desc'
+  const [typeFilter, setTypeFilter] = useState('');
+  const [coopTypeFilter, setCoopTypeFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [sortKey, setSortKey] = useState(null);
+  const [sortDir, setSortDir] = useState('asc');
 
   const handleSort = (key) => {
     if (sortKey === key) {
@@ -82,47 +83,75 @@ const MouPage = () => {
 
   // Extract unique options from data for filters
   const safeSqlData = Array.isArray(sqlData) ? sqlData : [];
-  const uniqueYears = Array.from(new Set(safeSqlData.map(item => String(item.Year || '')).filter(Boolean))).sort((a, b) => b - a);
-  const uniqueFaculties = Array.from(new Set(safeSqlData.map(item => String(item.Faculty || '')).filter(Boolean))).sort();
 
   // Filter logic
   const filteredMou = safeSqlData.filter((item) => {
-    // Gracefully handle potentially missing or undefined fields
-    const safeTitle = String(item.Name || '');
-    const safeAuthor = String(item.Owner || '');
-    const safeFaculty = String(item.Faculty || '');
-    const safeYear = String(item.Year || '');
+    const safeName = String(item.name || '');
+    const safeInstitution = String(item.institution || '');
+    const safeContact = String(item.contact || '');
+    const safeStaff = String(item.staff || '');
+    const safeType = String(item.country_check || '');
+    const safeCoopType = String(item.type || '');
 
     const matchesSearch = searchTerm === '' ||
-      safeTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      safeAuthor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      safeFaculty.toLowerCase().includes(searchTerm.toLowerCase());
+      safeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      safeInstitution.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      safeContact.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      safeStaff.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesYear = yearFilter === '' || safeYear === yearFilter;
-    const matchesFaculty = facultyFilter === '' || safeFaculty === facultyFilter;
+    let matchesType = true;
+    if (typeFilter === 'Inside') {
+      matchesType = safeType !== 'Outside';
+    } else if (typeFilter === 'Outside') {
+      matchesType = safeType === 'Outside';
+    }
 
-    return matchesSearch && matchesYear && matchesFaculty;
+    let matchesCoopType = true;
+    if (coopTypeFilter !== '') {
+      matchesCoopType = safeCoopType === coopTypeFilter;
+    }
+
+    let matchesStatus = true;
+    if (statusFilter !== '') {
+       let steps = TIMELINE_STEPS_INSIDE;
+       if (item.country_check === 'Outside') steps = TIMELINE_STEPS_OUTSIDE;
+       if (item.country_check === 'InsideSpecial') steps = TIMELINE_STEPS_INSIDE_SPECIAL;
+       const statusKey = item.status || '';
+       const doneCount = steps.findIndex((s) => s.key === statusKey) >= 0 
+          ? steps.findIndex((s) => s.key === statusKey) + 1 
+          : 0;
+       const pct = Math.round((doneCount / steps.length) * 100);
+       
+       if (statusFilter === 'Completed') {
+           matchesStatus = pct === 100;
+       } else if (statusFilter === 'InProgress') {
+           matchesStatus = pct > 0 && pct < 100;
+       } else if (statusFilter === 'NotStarted') {
+           matchesStatus = pct === 0;
+       }
+    }
+
+    return matchesSearch && matchesType && matchesCoopType && matchesStatus;
   });
 
   const getSortValue = (item, key) => {
     if (key === 'country_check') {
-      const type = item.country_check ?? item.Country_Check;
+      const type = item.country_check || '';
       if (type === 'Outside') return 'ต่างประเทศ';
       if (type === 'InsideSpecial') return 'ภายในประเทศ (เฉพาะกิจ)';
       return 'ในประเทศ';
     }
-    if (key === 'Status') {
-       const country = item.country_check ?? item.Country_Check;
+    if (key === 'status') {
+       const country = item.country_check || '';
        let steps = TIMELINE_STEPS_INSIDE;
        if (country === 'Outside') steps = TIMELINE_STEPS_OUTSIDE;
        if (country === 'InsideSpecial') steps = TIMELINE_STEPS_INSIDE_SPECIAL;
-       const statusKey = item.Status ?? item.status;
+       const statusKey = item.status || '';
        const doneCount = steps.findIndex((s) => s.key === statusKey) >= 0 
           ? steps.findIndex((s) => s.key === statusKey) + 1 
           : 0;
-       return (doneCount / steps.length) * 100; // Sort by percentage
+       return (doneCount / steps.length) * 100;
     }
-    // Default fallback
     return item[key] ?? '';
   };
 
@@ -174,6 +203,7 @@ const MouPage = () => {
                   </svg>
                   รีเฟรชข้อมูล
               </button>
+              
               <Link to="/add-Mou" className="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md text-sm font-medium transition duration-150 shadow-sm">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
                   เพิ่ม MOU
@@ -182,45 +212,86 @@ const MouPage = () => {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="bg-white rounded-lg border border-gray-200 p-3 mb-4 shadow-sm">
-          <div className="flex flex-col sm:flex-row gap-2">
+      <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 p-4 mb-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.08)] transition-all duration-300">
+          <div className="flex flex-col md:flex-row gap-4 items-center">
               {/* Search Input */}
-              <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <div className="relative flex-1 w-full group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <svg className="w-5 h-5 text-indigo-400 group-focus-within:text-indigo-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                      </svg>
                   </div>
                   <input
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder="ค้นหาชื่อ MOU, หรือผู้รับผิดชอบ..."
-                      className="block w-full pl-9 pr-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                      placeholder="ค้นหาชื่อ MOU, สถาบัน, หรือผู้ประสานงาน..."
+                      className="block w-full pl-11 pr-10 py-3 bg-white border border-gray-200 hover:border-indigo-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-sm"
                   />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <svg className="w-5 h-5 bg-gray-100 rounded-full p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  )}
               </div>
 
-              {/* Faculty Filter */}
-              <select
-                  value={facultyFilter}
-                  onChange={(e) => setFacultyFilter(e.target.value)}
-                  className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors min-w-[140px] max-w-[200px] truncate"
-              >
-                  <option value="">คณะทั้งหมด</option>
-                  {uniqueFaculties.map((faculty, index) => (
-                      <option key={index} value={faculty}>{faculty}</option>
-                  ))}
-              </select>
+              <div className="flex flex-wrap gap-3 w-full md:w-auto">
+                {/* Cooperation Type Filter */}
+                <div className="relative flex-1 min-w-[140px] md:w-40">
+                  <select
+                      value={coopTypeFilter}
+                      onChange={(e) => setCoopTypeFilter(e.target.value)}
+                      className="appearance-none w-full pl-4 pr-10 py-3 bg-white border border-gray-200 hover:border-indigo-300 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-sm cursor-pointer"
+                  >
+                      <option value="">ความร่วมมือทั้งหมด</option>
+                      <option value="MOU">MOU</option>
+                      <option value="MOA">MOA</option>
+                      <option value="LOI">LOI</option>
+                      <option value="LOA">LOA</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-indigo-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+                  </div>
+                </div>
 
-              {/* Year Filter */}
-              <select
-                  value={yearFilter}
-                  onChange={(e) => setYearFilter(e.target.value)}
-                  className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors min-w-[120px]"
-              >
-                  <option value="">ปีทั้งหมด</option>
-                  {uniqueYears.map((year, index) => (
-                      <option key={index} value={year}>{year}</option>
-                  ))}
-              </select>
+                {/* Country Type Filter */}
+                <div className="relative flex-1 min-w-[140px] md:w-44">
+                  <select
+                      value={typeFilter}
+                      onChange={(e) => setTypeFilter(e.target.value)}
+                      className="appearance-none w-full pl-4 pr-10 py-3 bg-white border border-gray-200 hover:border-indigo-300 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-sm cursor-pointer"
+                  >
+                      <option value="">ประเภท</option>
+                      <option value="Inside">ภายในประเทศ</option>
+                      <option value="Outside">ต่างประเทศ</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-indigo-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+                  </div>
+                </div>
+
+                {/* Status Filter */}
+                <div className="relative flex-1 min-w-[140px] md:w-48">
+                  <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="appearance-none w-full pl-4 pr-10 py-3 bg-white border border-gray-200 hover:border-indigo-300 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-sm cursor-pointer"
+                  >
+                      <option value="">สถานะทั้งหมด</option>
+                      <option value="NotStarted">ยังไม่เริ่มดำเนินการ</option>
+                      <option value="InProgress">กำลังดำเนินการ</option>
+                      <option value="Completed">เสร็จสิ้นสมบูรณ์</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-indigo-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+                  </div>
+                </div>
+              </div>
           </div>
       </div>
 
@@ -234,12 +305,12 @@ const MouPage = () => {
           <thead className="bg-gray-50">
             <tr>
               <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">ลำดับ</th>
-              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Name')}>ชื่อ MOU <SortIcon column="Name" /></th>
-              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Owner')}>ผู้รับผิดชอบ <SortIcon column="Owner" /></th>
-              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Faculty')}>คณะ <SortIcon column="Faculty" /></th>
-              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Year')}>ปี <SortIcon column="Year" /></th>
+              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('name')}>ชื่อ <SortIcon column="name" /></th>
+              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('institution')}>สถาบันที่ร่วม <SortIcon column="institution" /></th>
+              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('contact')}>ผู้ประสานงาน <SortIcon column="contact" /></th>
+              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('staff')}>ผู้รับผิดชอบ <SortIcon column="staff" /></th>
               <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('country_check')}>ประเภท <SortIcon column="country_check" /></th>
-              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('Status')}>สถานะ <SortIcon column="Status" /></th>
+              <th scope="col" className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer select-none hover:text-indigo-600 transition-colors" onClick={() => handleSort('status')}>สถานะ <SortIcon column="status" /></th>
               <th scope="col" className="relative px-4 py-2 text-center"><span className="sr-only">Edit</span></th>
             </tr>
           </thead>
@@ -261,16 +332,16 @@ const MouPage = () => {
                 return (
                   <tr key={item.ID || index} className="hover:bg-gray-50 transition duration-150">
                     <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500 text-center">{index + 1}</td>
-                    <td className="px-4 py-2.5 text-sm text-gray-900 font-medium text-center">{item.Name}</td>
-                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500 text-center">{item.Owner}</td>
-                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500 text-center">{item.Faculty}</td>
-                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500 text-center">{item.Year}</td>
+                    <td className="px-4 py-2.5 text-sm text-gray-900 font-medium text-center">{item.name}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500 text-center">{item.institution}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500 text-center">{item.contact}</td>
+                    <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500 text-center">{item.staff}</td>
                     <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-500 text-center">
-                      {(item.country_check ?? item.Country_Check) === 'Outside' ? 'ต่างประเทศ' : ((item.country_check ?? item.Country_Check) === 'InsideSpecial' ? 'ภายในประเทศ (เฉพาะกิจ)' : 'ในประเทศ')}
+                      {item.country_check === 'Outside' ? 'ต่างประเทศ' : (item.country_check === 'InsideSpecial' ? 'ภายในประเทศ (เฉพาะกิจ)' : 'ในประเทศ')}
                     </td>
                     <td className="px-4 py-2.5 whitespace-nowrap text-center">
                       <div className="flex justify-center">
-                        <MiniProgress status={item.Status ?? item.status} country_check={item.country_check ?? item.Country_Check} />
+                        <MiniProgress status={item.status || ''} country_check={item.country_check || ''} />
                       </div>
                     </td>
                     <td className="px-4 py-2.5 whitespace-nowrap text-center text-sm font-medium">
