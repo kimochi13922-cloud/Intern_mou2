@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Allow direct access to assets and actions directories
+RewriteRule ^(assets|actions)($|/) - [L]
+
+# For all other requests, if it's not a real file or directory, route to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
