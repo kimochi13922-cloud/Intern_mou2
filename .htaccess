@@ -1,5 +1,6 @@
 RewriteEngine On
-
+RewriteBase /intern_mou2/
+Options -MultiViews
 # Allow direct access to assets and actions directories
 RewriteRule ^(assets|actions)($|/) - [L]
 

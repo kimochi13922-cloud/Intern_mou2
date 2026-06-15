@@ -67,8 +67,8 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                 <input type="text" name="institution" class="form-control" placeholder="ระบุสถาบันที่ร่วม">
                             </div>
                             <div class="form-col form-group">
-                                <label class="form-label">ผู้ประสานงาน</label>
-                                <input type="text" name="contact" class="form-control" placeholder="ระบุผู้ประสานงาน">
+                                <label class="form-label">ผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา</label>
+                                <input type="text" name="contact" class="form-control" placeholder="ระบุผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา">
                             </div>
                         </div>
 

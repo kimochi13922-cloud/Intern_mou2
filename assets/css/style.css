@@ -83,7 +83,7 @@ a:hover {
 }
 
 .navbar-brand {
-    font-family: 'Chakra Petch', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary);

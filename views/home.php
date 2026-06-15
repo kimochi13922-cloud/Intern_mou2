@@ -1,6 +1,6 @@
 <?php
 session_start();
-// index.php - Dashboard page
+// index.php - Home page
 require_once 'includes/auth.php';
 require_once 'config/db.php';
 

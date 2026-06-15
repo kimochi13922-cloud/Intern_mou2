@@ -377,7 +377,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                             <div class="detail-value"><?php echo htmlspecialchars($mou['institution'] ? $mou['institution'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
                         </div>
                         <div class="detail-row">
-                            <div class="detail-label">ผู้ประสานงาน</div>
+                            <div class="detail-label">ผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา</div>
                             <div class="detail-value"><?php echo htmlspecialchars($mou['contact'] ? $mou['contact'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
                         </div>
                         <div class="detail-row">
@@ -531,11 +531,16 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                             <label style="display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 0.2rem; font-weight: 500;">หมวดหมู่</label>
                             <select id="filter-category" class="form-control" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
                                 <option value="">ทั้งหมด</option>
-                                <option value="ด้านสวัสดิการ">ด้านสวัสดิการ</option>
-                                <option value="ด้านวิชาการ">ด้านวิชาการ</option>
-                                <option value="ด้านการฝึกงาน">ด้านการฝึกงาน</option>
-                                <option value="ด้านการแลกเปลี่ยนทางวิชาการและวัฒนธรรม">ด้านการแลกเปลี่ยน</option>
+                                <option value="ด้านการศึกษา">ด้านการศึกษา</option>
+                                <option value="ด้านบริการวิชาการ">ด้านบริการวิชาการ</option>
+                                <option value="ด้านการวิจัย">ด้านการวิจัย</option>
+                                <option value="ด้านการแลกเปลี่ยน">ด้านการแลกเปลี่ยน</option>
+                                <option value="ด้านการฝึกงาน/สหกิจ">ด้านการฝึกงาน/สหกิจ</option>
+                                <option value="ด้านการประชุมวิชาการ">ด้านการประชุมวิชาการ</option>
+                                <option value="ด้านการศึกษาดูงาน">ด้านการศึกษาดูงาน</option>
                                 <option value="ด้านอื่นๆ">ด้านอื่นๆ</option>
+                                
+                                
                             </select>
                         </div>
                         <div>
@@ -564,7 +569,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         </div>
                         
                         <div class="form-group mb-4">
-                            <textarea name="activities_desc" class="form-control" rows="4" placeholder="คำอธิบายกิจกรรม (ไม่บังคับ)" style="resize: vertical;"></textarea>
+                            <textarea name="activities_desc" class="form-control" rows="4" placeholder="คำอธิบายกิจกรรม (ถ้ามี)" style="resize: vertical;"></textarea>
                         </div>
                         
                         <div class="form-row mb-4" style="gap: 1rem;">
@@ -591,10 +596,13 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                             <div class="form-col" style="flex: 1;">
                                 <select name="activities_category" class="form-control">
                                     <option value="">เลือกหมวดหมู่</option>
-                                    <option value="ด้านสวัสดิการ">ด้านสวัสดิการ</option>
-                                    <option value="ด้านวิชาการ">ด้านวิชาการ</option>
-                                    <option value="ด้านการฝึกงาน">ด้านการฝึกงาน</option>
-                                    <option value="ด้านการแลกเปลี่ยนทางวิชาการและวัฒนธรรม">ด้านการแลกเปลี่ยนทางวิชาการและวัฒนธรรม</option>
+                                    <option value="ด้านการศึกษา">ด้านการศึกษา</option>
+                                    <option value="ด้านบริการวิชาการ">ด้านบริการวิชาการ</option>
+                                    <option value="ด้านการวิจัย">ด้านการวิจัย</option>
+                                    <option value="ด้านการแลกเปลี่ยน">ด้านการแลกเปลี่ยน</option>
+                                    <option value="ด้านการฝึกงาน/สหกิจ">ด้านการฝึกงาน/สหกิจ</option>
+                                    <option value="ด้านการประชุมวิชาการ">ด้านการประชุมวิชาการ</option>
+                                    <option value="ด้านการศึกษาดูงาน">ด้านการศึกษาดูงาน</option>
                                     <option value="ด้านอื่นๆ">ด้านอื่นๆ</option>
                                 </select>
                             </div>
@@ -772,10 +780,13 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                         <div class="form-col" style="flex: 1;">
                                             <select name="activities_category" class="form-control">
                                                 <option value="">เลือกหมวดหมู่</option>
-                                                <option value="ด้านสวัสดิการ" <?php echo $act['activities_category'] == 'ด้านสวัสดิการ' ? 'selected' : ''; ?>>ด้านสวัสดิการ</option>
-                                                <option value="ด้านวิชาการ" <?php echo $act['activities_category'] == 'ด้านวิชาการ' ? 'selected' : ''; ?>>ด้านวิชาการ</option>
-                                                <option value="ด้านการฝึกงาน" <?php echo $act['activities_category'] == 'ด้านการฝึกงาน' ? 'selected' : ''; ?>>ด้านการฝึกงาน</option>
-                                                <option value="ด้านการแลกเปลี่ยนทางวิชาการและวัฒนธรรม" <?php echo $act['activities_category'] == 'ด้านการแลกเปลี่ยนทางวิชาการและวัฒนธรรม' ? 'selected' : ''; ?>>ด้านการแลกเปลี่ยนทางวิชาการและวัฒนธรรม</option>
+                                                <option value="ด้านการศึกษา" <?php echo $act['activities_category'] == 'ด้านการศึกษา' ? 'selected' : ''; ?>>ด้านการศึกษา</option>
+                                                <option value="ด้านบริการวิชาการ" <?php echo $act['activities_category'] == 'ด้านบริการวิชาการ' ? 'selected' : ''; ?>>ด้านบริการวิชาการ</option>
+                                                <option value="ด้านการวิจัย" <?php echo $act['activities_category'] == 'ด้านการวิจัย' ? 'selected' : ''; ?>>ด้านการวิจัย</option>
+                                                <option value="ด้านการแลกเปลี่ยน" <?php echo $act['activities_category'] == 'ด้านการแลกเปลี่ยน' ? 'selected' : ''; ?>>ด้านการแลกเปลี่ยน</option>
+                                                <option value="ด้านการฝึกงาน/สหกิจ" <?php echo $act['activities_category'] == 'ด้านการฝึกงาน/สหกิจ' ? 'selected' : ''; ?>>ด้านการฝึกงาน/สหกิจ</option>
+                                                <option value="ด้านการประชุมวิชาการ" <?php echo $act['activities_category'] == 'ด้านการประชุมวิชาการ' ? 'selected' : ''; ?>>ด้านการประชุมวิชาการ</option>
+                                                <option value="ด้านการศึกษาดูงาน" <?php echo $act['activities_category'] == 'ด้านการศึกษาดูงาน' ? 'selected' : ''; ?>>ด้านการศึกษาดูงาน</option>
                                                 <option value="ด้านอื่นๆ" <?php echo $act['activities_category'] == 'ด้านอื่นๆ' ? 'selected' : ''; ?>>ด้านอื่นๆ</option>
                                             </select>
                                         </div>

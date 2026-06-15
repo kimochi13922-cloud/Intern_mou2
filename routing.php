@@ -15,7 +15,7 @@ elseif (file_exists(__DIR__ . $path)) {
 } 
 // Otherwise, display a basic 404 message or redirect to index.php
 else {
-    http_response_code(404);
+    header("HTTP/1.0 404 Not Found");
     echo "<h1>404 Not Found</h1>";
     echo "<p>The page you are looking for could not be found.</p>";
     echo "<a href='/index.php'>Return to Dashboard</a>";
