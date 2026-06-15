@@ -15,42 +15,49 @@ $result = mysqli_query($conn, $query);
     <title>รายการ MOU - ระบบจัดการฐานข้อมูล MOU</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/intern_mou2/assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
 </head>
-<body>
-    <div class="app-container">
+<body class="font-sans antialiased text-slate-900 bg-slate-50">
+    <div class="min-h-screen flex flex-col">
         <?php include 'includes/navbar.php'; ?>
 
-        <main class="main-content fade-up">
-            <div class="flex justify-between items-center mb-8">
+        <main class="flex-1 w-full max-w-[1400px] mx-auto p-4 md:p-8 fade-up">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2>รายการข้อมูล MOU</h2>
-                    <p class="text-muted mt-2">จัดการข้อมูล MOU ในระบบ</p>
+                    <h2 class="text-3xl font-bold text-slate-900 font-['Chakra_Petch']">รายการข้อมูล MOU</h2>
+                    <p class="text-slate-500 mt-2">จัดการข้อมูล MOU ในระบบ</p>
                 </div>
-                <a href="/intern_mou2/mou/add" class="btn btn-primary">
+                <a href="/intern_mou2/mou/add" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-colors shadow-sm">
                     + เพิ่ม MOU ใหม่
                 </a>
             </div>
 
-            <div class="card mb-4" style="padding: 0.75rem 1.25rem;">
-                <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <label class="form-label" style="margin-bottom: 0.25rem; font-size: 0.75rem; color: #64748b;">ค้นหา (ชื่อ / สถาบัน / ผู้ประสานงาน / ผู้รับผิดชอบ)</label>
-                        <input type="text" id="searchInput" class="form-control" style="padding: 0.4rem 0.75rem; font-size: 0.875rem;" placeholder="พิมพ์คำค้นหา..." onkeyup="filterTable()">
+            <!-- Filters -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6 p-4 md:p-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">ค้นหา (ชื่อ / สถาบัน / ผู้ประสานงาน / ผู้รับผิดชอบ)</label>
+                        <input type="text" id="searchInput" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" placeholder="พิมพ์คำค้นหา..." onkeyup="filterTable()">
                     </div>
-                    <div style="flex: 1; min-width: 150px;">
-                        <label class="form-label" style="margin-bottom: 0.25rem; font-size: 0.75rem; color: #64748b;">ขอบเขต</label>
-                        <select id="typeFilter" class="form-control" style="padding: 0.4rem 0.75rem; font-size: 0.875rem;" onchange="filterTable()">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">ขอบเขต</label>
+                        <select id="typeFilter" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" onchange="filterTable()">
                             <option value="">ทั้งหมด</option>
                             <option value="ภายในประเทศ">ภายในประเทศ</option>
                             <option value="ต่างประเทศ">ต่างประเทศ</option>
-        
                         </select>
                     </div>
-                    <div style="flex: 1; min-width: 150px;">
-                        <label class="form-label" style="margin-bottom: 0.25rem; font-size: 0.75rem; color: #64748b;">ประเภทเอกสาร</label>
-                        <select id="mouTypeFilter" class="form-control" style="padding: 0.4rem 0.75rem; font-size: 0.875rem;" onchange="filterTable()">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">ประเภทเอกสาร</label>
+                        <select id="mouTypeFilter" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" onchange="filterTable()">
                             <option value="">ทั้งหมด</option>
                             <option value="MOU">MOU</option>
                             <option value="MOA">MOA</option>
@@ -58,82 +65,82 @@ $result = mysqli_query($conn, $query);
                             <option value="LOA">LOA</option>
                         </select>
                     </div>
-                    <div style="flex: 1; min-width: 150px;">
-                        <label class="form-label" style="margin-bottom: 0.25rem; font-size: 0.75rem; color: #64748b;">สถานะ</label>
-                        <select id="statusFilter" class="form-control" style="padding: 0.4rem 0.75rem; font-size: 0.875rem;" onchange="filterTable()">
-                            <option value="">ทั้งหมด</option>
-                            <option value="สำเร็จ">สำเร็จ</option>
-                            <option value="รอดำเนินการ">รอดำเนินการ</option>
-                            <option value="ยังไม่ได้ดำเนินการ">ยังไม่ได้ดำเนินการ</option>
-                        </select>
-                    </div>
                     <div>
-                        <button class="btn btn-secondary" style="padding: 0.4rem 0.75rem; font-size: 0.875rem;" onclick="resetFilters()">
-                            <svg style="width: 1rem; height: 1rem; display: inline-block; vertical-align: text-top; margin-right: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                            ล้างตัวกรอง
-                        </button>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">สถานะ</label>
+                        <div class="flex gap-2">
+                            <select id="statusFilter" class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" onchange="filterTable()">
+                                <option value="">ทั้งหมด</option>
+                                <option value="สำเร็จ">สำเร็จ</option>
+                                <option value="รอดำเนินการ">รอดำเนินการ</option>
+                                <option value="ยังไม่ได้ดำเนินการ">ยังไม่ได้ดำเนินการ</option>
+                            </select>
+                            <button class="px-3 py-2.5 text-slate-500 hover:text-red-600 bg-slate-50 hover:bg-red-50 border border-slate-200 rounded-lg transition-colors flex-shrink-0" onclick="resetFilters()" title="ล้างตัวกรอง">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="text-muted mb-4" style="font-size: 0.875rem; color: #64748b; font-weight: 500;">
-                แสดง <span id="visibleCount"><?php echo mysqli_num_rows($result); ?></span> จาก <?php echo mysqli_num_rows($result); ?> รายการ
+            <div class="text-sm text-slate-500 font-medium mb-4 px-2">
+                แสดง <span id="visibleCount" class="text-indigo-600"><?php echo mysqli_num_rows($result); ?></span> จาก <?php echo mysqli_num_rows($result); ?> รายการ
             </div>
 
-            <div class="card">
-                <div class="table-container">
-                    <table class="table">
+            <!-- Table -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto w-full">
+                    <table class="w-full text-left text-sm whitespace-nowrap table">
                         <thead>
-                            <tr>
-                                <th>ลำดับ</th>
-                                <th style="cursor: pointer;" onclick="sortTable(1)">ชื่อ <span class="sort-icon" style="opacity: 0.4;">&#8597;</span></th>
-                                <th style="cursor: pointer;" onclick="sortTable(2)">สถาบันที่ร่วม <span class="sort-icon" style="opacity: 0.4;">&#8597;</span></th>
-                                <th style="cursor: pointer;" onclick="sortTable(3)">ผู้ประสานงาน <span class="sort-icon" style="opacity: 0.4;">&#8597;</span></th>
-                                <th style="cursor: pointer;" onclick="sortTable(4)">ผู้รับผิดชอบ <span class="sort-icon" style="opacity: 0.4;">&#8597;</span></th>
-                                <th style="cursor: pointer;" onclick="sortTable(5)">ประเภทเอกสาร <span class="sort-icon" style="opacity: 0.4;">&#8597;</span></th>
-                                <th style="cursor: pointer;" onclick="sortTable(6)">ขอบเขต <span class="sort-icon" style="opacity: 0.4;">&#8597;</span></th>
-                                <th style="cursor: pointer; text-align: center;" onclick="sortTable(7)">สถานะ <span class="sort-icon" style="opacity: 0.4;">&#8597;</span></th>
-                                <th></th>
+                            <tr class="bg-slate-50 border-b border-slate-200">
+                                <th class="px-4 py-4 font-semibold text-slate-600 uppercase tracking-wider text-xs">ลำดับ</th>
+                                <th class="px-4 py-4 font-semibold text-slate-600 uppercase tracking-wider text-xs cursor-pointer hover:bg-slate-100 transition-colors" onclick="sortTable(1)">ชื่อ <span class="sort-icon opacity-40 ml-1">&#8597;</span></th>
+                                <th class="px-4 py-4 font-semibold text-slate-600 uppercase tracking-wider text-xs cursor-pointer hover:bg-slate-100 transition-colors" onclick="sortTable(2)">สถาบันที่ร่วม <span class="sort-icon opacity-40 ml-1">&#8597;</span></th>
+                                <th class="px-4 py-4 font-semibold text-slate-600 uppercase tracking-wider text-xs cursor-pointer hover:bg-slate-100 transition-colors" onclick="sortTable(3)">ผู้ประสานงาน <span class="sort-icon opacity-40 ml-1">&#8597;</span></th>
+                                <th class="px-4 py-4 font-semibold text-slate-600 uppercase tracking-wider text-xs cursor-pointer hover:bg-slate-100 transition-colors" onclick="sortTable(4)">ผู้รับผิดชอบ <span class="sort-icon opacity-40 ml-1">&#8597;</span></th>
+                                <th class="px-4 py-4 font-semibold text-slate-600 uppercase tracking-wider text-xs cursor-pointer hover:bg-slate-100 transition-colors" onclick="sortTable(5)">ประเภทเอกสาร <span class="sort-icon opacity-40 ml-1">&#8597;</span></th>
+                                <th class="px-4 py-4 font-semibold text-slate-600 uppercase tracking-wider text-xs cursor-pointer hover:bg-slate-100 transition-colors" onclick="sortTable(6)">ขอบเขต <span class="sort-icon opacity-40 ml-1">&#8597;</span></th>
+                                <th class="px-4 py-4 font-semibold text-slate-600 uppercase tracking-wider text-xs text-center cursor-pointer hover:bg-slate-100 transition-colors" onclick="sortTable(7)">สถานะ <span class="sort-icon opacity-40 ml-1">&#8597;</span></th>
+                                <th class="px-4 py-4"></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100">
                             <?php if (mysqli_num_rows($result) === 0): ?>
                                 <tr>
-                                    <td colspan="8" class="text-center">ไม่พบข้อมูล</td>
+                                    <td colspan="9" class="px-4 py-8 text-center text-slate-500">ไม่พบข้อมูล</td>
                                 </tr>
                             <?php else: ?>
                                 <?php 
                                 $counter = 1;
                                 while ($row = mysqli_fetch_assoc($result)): 
                                 ?>
-                                <tr>
-                                    <td><?php echo $counter++; ?></td>
-                                    <td>
-                                        <div style="margin: 0 auto; font-weight: 600; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo htmlspecialchars($row['name'], ENT_COMPAT, 'UTF-8'); ?>">
+                                <tr class="hover:bg-indigo-50/50 transition-colors">
+                                    <td class="px-4 py-3 text-slate-500 font-medium"><?php echo $counter++; ?></td>
+                                    <td class="px-4 py-3">
+                                        <div class="font-semibold text-slate-900 max-w-[250px] truncate" title="<?php echo htmlspecialchars($row['name'], ENT_COMPAT, 'UTF-8'); ?>">
                                             <?php echo htmlspecialchars($row['name'], ENT_COMPAT, 'UTF-8'); ?>
                                         </div>
                                     </td>
-                                    <td style="color: #64748b;">
-                                        <div style="margin: 0 auto; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <td class="px-4 py-3 text-slate-600">
+                                        <div class="max-w-[200px] truncate" title="<?php echo htmlspecialchars($row['institution'], ENT_COMPAT, 'UTF-8'); ?>">
                                             <?php echo htmlspecialchars($row['institution'], ENT_COMPAT, 'UTF-8'); ?>
                                         </div>
                                     </td>
-                                    <td style="color: #64748b;">
-                                        <div style="margin: 0 auto; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <td class="px-4 py-3 text-slate-500">
+                                        <div class="max-w-[150px] truncate">
                                             <?php echo htmlspecialchars($row['contact'] ? $row['contact'] : '-', ENT_COMPAT, 'UTF-8'); ?>
                                         </div>
                                     </td>
-                                    <td style="color: #64748b;">
-                                        <div style="margin: 0 auto; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <td class="px-4 py-3 text-slate-500">
+                                        <div class="max-w-[150px] truncate">
                                             <?php echo htmlspecialchars($row['staff'] ? $row['staff'] : '-', ENT_COMPAT, 'UTF-8'); ?>
                                         </div>
                                     </td>
-                                    <td style="color: #64748b;">
-                                        <div style="margin: 0 auto; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <td class="px-4 py-3 text-slate-600 font-medium">
+                                        <div class="max-w-[150px] truncate">
                                             <?php echo htmlspecialchars($row['type'] ? $row['type'] : '-', ENT_COMPAT, 'UTF-8'); ?>
                                         </div>
                                     </td>
-                                    <td style="color: #64748b;">
+                                    <td class="px-4 py-3 text-slate-600">
                                         <?php 
                                             if ($row['country_check'] == 'Inside') echo 'ภายในประเทศ';
                                             elseif ($row['country_check'] == 'InsideSpecial') echo 'ภายในประเทศ (เฉพาะกิจ)';
@@ -141,28 +148,28 @@ $result = mysqli_query($conn, $query);
                                             else echo 'พิเศษ';
                                         ?>
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td class="px-4 py-3 text-center">
                                         <?php 
                                         $computed_status = "รอดำเนินการ";
-                                        $statusClass = "badge-warning";
+                                        $statusClass = "bg-amber-100 text-amber-800";
                                         
                                         if (!empty($row['sign_date']) || !empty($row['notice_date'])) {
                                             $computed_status = "สำเร็จ";
-                                            $statusClass = "badge-success";
+                                            $statusClass = "bg-emerald-100 text-emerald-800";
                                         } elseif (empty($row['approval_date'])) {
                                             $computed_status = "ยังไม่ได้ดำเนินการ";
-                                            $statusClass = "badge-danger";
+                                            $statusClass = "bg-red-100 text-red-800";
                                         } else {
                                             $computed_status = "รอดำเนินการ";
-                                            $statusClass = "badge-warning";
+                                            $statusClass = "bg-amber-100 text-amber-800";
                                         }
                                         ?>
-                                        <span class="badge <?php echo $statusClass; ?>">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold <?php echo $statusClass; ?>">
                                             <?php echo $computed_status; ?>
                                         </span>
                                     </td>
-                                    <td style="text-align: right;">
-                                        <a href="/intern_mou2/mou/detail?id=<?php echo $row['ID']; ?>" style="color: var(--primary); font-weight: 600; font-size: 0.875rem; text-decoration: none;">
+                                    <td class="px-4 py-3 text-right">
+                                        <a href="/intern_mou2/mou/detail?id=<?php echo $row['ID']; ?>" class="text-indigo-600 font-semibold hover:text-indigo-800 transition-colors">
                                             ดูรายละเอียด
                                         </a>
                                     </td>
@@ -192,14 +199,14 @@ $result = mysqli_query($conn, $query);
             const icon = th.querySelector(".sort-icon");
             if (icon) {
                 icon.innerHTML = "&#8597;";
-                icon.style.opacity = "0.4";
+                icon.classList.replace('opacity-100', 'opacity-40');
             }
         });
         
         const currentIcon = headers[n].querySelector(".sort-icon");
         if (currentIcon) {
             currentIcon.innerHTML = dir === "asc" ? "&#8593;" : "&#8595;";
-            currentIcon.style.opacity = "1";
+            currentIcon.classList.replace('opacity-40', 'opacity-100');
         }
 
         while (switching) {
@@ -282,6 +289,3 @@ $result = mysqli_query($conn, $query);
     </script>
 </body>
 </html>
-
-
-

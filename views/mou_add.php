@@ -14,8 +14,15 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
     <title>เพิ่มข้อมูล MOU ใหม่ - ระบบจัดการฐานข้อมูล MOU</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/intern_mou2/assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
     <script>
         function handleNationChange(select) {
             var otherContainer = document.getElementById('other-nation-container');
@@ -41,56 +48,56 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
         }
     </script>
 </head>
-<body>
-    <div class="app-container">
+<body class="font-sans antialiased text-slate-900 bg-slate-50">
+    <div class="min-h-screen flex flex-col">
         <?php include 'includes/navbar.php'; ?>
 
-        <main class="main-content fade-up" style="max-width: 800px;">
-            <div class="card">
-                <div class="card-header">
-                    <h3>เพิ่มข้อมูล MOU ใหม่</h3>
-                    <p class="text-muted mt-2">กรุณากรอกข้อมูลรายละเอียดของ MOU ให้ครบถ้วน</p>
+        <main class="flex-1 w-full max-w-4xl mx-auto p-4 md:p-8 fade-up">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 md:p-8 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
+                    <h3 class="text-2xl font-bold text-slate-900 font-['Chakra_Petch']">เพิ่มข้อมูล MOU ใหม่</h3>
+                    <p class="text-slate-500 mt-2">กรุณากรอกข้อมูลรายละเอียดของ MOU ให้ครบถ้วน</p>
                 </div>
                 
-                <div class="card-body">
+                <div class="p-6 md:p-8">
                     <form method="POST" action="/intern_mou2/actions/process_mou.php">
                         <input type="hidden" name="action" value="create">
                         
-                        <div class="form-group">
-                            <label class="form-label">ชื่อ MOU <span class="text-danger">*</span></label>
-                            <input type="text" name="name" class="form-control" required placeholder="ระบุชื่อ MOU">
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">ชื่อ MOU <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm" required placeholder="ระบุชื่อ MOU">
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-col form-group">
-                                <label class="form-label">สถาบันที่ร่วม</label>
-                                <input type="text" name="institution" class="form-control" placeholder="ระบุสถาบันที่ร่วม">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">สถาบันที่ร่วม</label>
+                                <input type="text" name="institution" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm" placeholder="ระบุสถาบันที่ร่วม">
                             </div>
-                            <div class="form-col form-group">
-                                <label class="form-label">ผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา</label>
-                                <input type="text" name="contact" class="form-control" placeholder="ระบุผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">ผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา</label>
+                                <input type="text" name="contact" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm" placeholder="ระบุผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา">
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-col form-group">
-                                <label class="form-label">ผู้รับผิดชอบ</label>
-                                <input type="text" name="staff" class="form-control" placeholder="ระบุผู้รับผิดชอบ">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">ผู้รับผิดชอบ</label>
+                                <input type="text" name="staff" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm" placeholder="ระบุผู้รับผิดชอบ">
                             </div>
-                            <div class="form-col form-group">
-                                <label class="form-label">ระยะเวลา</label>
-                                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.5rem; align-items: center;">
-                                    <input type="date" name="period_start" class="form-control" style="width: 100%;">
-                                    <span style="color:var(--text-muted);">ถึง</span>
-                                    <input type="date" name="period_end" class="form-control" style="width: 100%;">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">ระยะเวลา</label>
+                                <div class="grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
+                                    <input type="date" name="period_start" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm">
+                                    <span class="text-slate-500">ถึง</span>
+                                    <input type="date" name="period_end" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-col form-group">
-                                <label class="form-label">ประเภทเอกสาร</label>
-                                <select name="type" class="form-control">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">ประเภทเอกสาร</label>
+                                <select name="type" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm">
                                     <option value="">เลือกประเภท</option>
                                     <option value="MOU">MOU</option>
                                     <option value="MOA">MOA</option>
@@ -98,10 +105,10 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                     <option value="LOA">LOA</option>
                                 </select>
                             </div>
-                            <div class="form-col form-group">
-                                <label class="form-label">ประเทศ</label>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">ประเทศ</label>
 
-                                <select name="nation" id="nation-select" class="form-control" onchange="handleNationChange(this)">
+                                <select name="nation" id="nation-select" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm" onchange="handleNationChange(this)">
                                     <option value="">เลือกประเทศ</option>
                                     <option value="ไทย">ไทย</option>
                                     <?php foreach ($nations as $n): ?>
@@ -110,25 +117,25 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                     <option value="Other">Other (ระบุเอง)</option>
                                 </select>
                                 
-                                <div id="other-nation-container" style="display: none; gap: 0.5rem;">
-                                    <input type="text" name="nation_custom" id="nation_custom" class="form-control" placeholder="ระบุประเทศด้วยตนเอง">
-                                    <button type="button" class="btn btn-secondary" onclick="cancelCustomNation()">ยกเลิก</button>
+                                <div id="other-nation-container" class="hidden gap-2">
+                                    <input type="text" name="nation_custom" id="nation_custom" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm flex-1" placeholder="ระบุประเทศด้วยตนเอง">
+                                    <button type="button" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors shadow-sm" onclick="cancelCustomNation()">ยกเลิก</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">ขอบเขต</label>
-                            <select name="country_check" class="form-control">
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">ขอบเขต</label>
+                            <select name="country_check" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm">
                                 <option value="Inside">ภายในประเทศ (Inside)</option>
                                 <option value="InsideSpecial">ภายในประเทศ ลักษณะเฉพาะกิจ</option>
                                 <option value="Outside">ต่างประเทศ (Outside)</option>
                             </select>
                         </div>
                         
-                        <div class="flex justify-between mt-8" style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
-                            <a href="/intern_mou2/mou/list" class="btn btn-secondary">ยกเลิก</a>
-                            <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
+                        <div class="flex flex-col-reverse sm:flex-row justify-between gap-4 mt-8 pt-6 border-t border-slate-200">
+                            <a href="/intern_mou2/mou/list" class="inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">ยกเลิก</a>
+                            <button type="submit" class="inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">บันทึกข้อมูล</button>
                         </div>
                     </form>
                 </div>
@@ -137,6 +144,3 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
     </div>
 </body>
 </html>
-
-
-

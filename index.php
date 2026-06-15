@@ -1,5 +1,5 @@
 <?php
-// CORS Headers to allow cross-origin requests (Pass CORS Policy)
+// CORS Headers to allow cross-origin requests
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     header("HTTP/1.1 200 OK");
     exit;
 }
+
 
 // Main Router (Front Controller)
 
@@ -36,6 +37,7 @@ $path = strtolower($path);
 $routes = array(
     '/' => 'views/home.php',
     '/home' => 'views/home.php',
+    '/dashboard' => 'views/dashboard.php',
     '/login' => 'views/login.php',
     '/logout' => 'views/logout.php',
     '/mou/list' => 'views/mou_list.php',

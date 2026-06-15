@@ -49,7 +49,18 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/intern_mou2/assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
     <script>
         function toggleAddActivity() {
             var form = document.getElementById('add-activity-form');
@@ -78,7 +89,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                 view.style.display = 'none';
                 edit.style.display = 'block';
             } else {
-                view.style.display = 'flex';
+                view.style.display = 'block';
                 edit.style.display = 'none';
             }
         }
@@ -183,23 +194,23 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
     </script>
     <script src="/intern_mou2/assets/js/activity_filter.js"></script>
 </head>
-<body>
-    <div class="app-container">
+<body class="font-sans antialiased text-slate-900 bg-slate-50">
+    <div class="min-h-screen flex flex-col">
         <?php include 'includes/navbar.php'; ?>
 
-        <main class="main-content fade-up" style="max-width: 1000px;">
+        <main class="flex-1 w-full max-w-6xl mx-auto p-4 md:p-8 fade-up">
             <!-- Header Card -->
-            <div class="detail-header-card">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8 mb-8 relative overflow-hidden bg-gradient-to-r from-slate-50 to-white">
                 <div class="flex justify-between items-start">
-                    <span class="badge-id">ID: <?php echo $mou['ID']; ?></span>
-                    <a href="#" class="btn-edit-text" onclick="toggleTitleEdit(); return false;">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700 mb-4 shadow-sm">ID: <?php echo $mou['ID']; ?></span>
+                    <a href="#" class="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors" onclick="toggleTitleEdit(); return false;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>
                         แก้ไขชื่อ
                     </a>
                 </div>
                 
                 <div id="title-view-state">
-                    <h1 class="mou-title"><?php echo htmlspecialchars($mou['name'], ENT_COMPAT, 'UTF-8'); ?></h1>
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3 font-['Chakra_Petch'] leading-tight"><?php echo htmlspecialchars($mou['name'], ENT_COMPAT, 'UTF-8'); ?></h1>
                     <div class="text-muted" style="margin-bottom: 0.5rem;">
                         <?php echo htmlspecialchars($mou['type'] ? $mou['type'] : 'MOU', ENT_COMPAT, 'UTF-8'); ?> • ระยะเวลา <?php echo htmlspecialchars($mou['period'] ? $mou['period'] : '-', ENT_COMPAT, 'UTF-8'); ?>
                     </div>
@@ -209,9 +220,9 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                     <input type="hidden" name="action" value="update_mou_title">
                     <input type="hidden" name="id" value="<?php echo $id; ?>">
                     <div class="flex gap-2">
-                        <input type="text" name="name" class="form-control" style="font-size: 1.25rem; font-weight: 600;" value="<?php echo htmlspecialchars($mou['name'], ENT_COMPAT, 'UTF-8'); ?>" required>
-                        <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1.5rem; background: #4f46e5; border-radius: var(--radius-md);">บันทึก</button>
-                        <button type="button" class="btn btn-secondary" onclick="toggleTitleEdit();" style="padding: 0.5rem 1.5rem; border-radius: var(--radius-md);">ยกเลิก</button>
+                        <input type="text" name="name" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" style="font-size: 1.25rem; font-weight: 600;" value="<?php echo htmlspecialchars($mou['name'], ENT_COMPAT, 'UTF-8'); ?>" required>
+                        <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-colors shadow-sm" style="padding: 0.5rem 1.5rem; background: #4f46e5; border-radius: var(--radius-md);">บันทึก</button>
+                        <button type="button" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors" onclick="toggleTitleEdit();" style="padding: 0.5rem 1.5rem; border-radius: var(--radius-md);">ยกเลิก</button>
                     </div>
                 </form>
 
@@ -222,10 +233,10 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                             <div>
                                 <strong>หมายเหตุ:</strong> <?php echo nl2br(htmlspecialchars($mou['notes'], ENT_COMPAT, 'UTF-8')); ?>
                             </div>
-                            <a href="#" class="btn-edit-text" onclick="toggleNotesEdit(); return false;" style="margin-left: 1rem; flex-shrink: 0;">แก้ไข</a>
+                            <a href="#" class="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors" onclick="toggleNotesEdit(); return false;" style="margin-left: 1rem; flex-shrink: 0;">แก้ไข</a>
                         </div>
                         <?php else: ?>
-                        <a href="#" class="btn-edit-text" onclick="toggleNotesEdit(); return false;" style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                        <a href="#" class="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors" onclick="toggleNotesEdit(); return false;" style="display: inline-flex; align-items: center; gap: 0.25rem;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
                             เพิ่มหมายเหตุ
                         </a>
@@ -236,23 +247,23 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         <input type="hidden" name="action" value="update_mou_notes">
                         <input type="hidden" name="id" value="<?php echo $id; ?>">
                         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                            <textarea name="notes" class="form-control" rows="3" placeholder="หมายเหตุ (ถ้ามี)"><?php echo htmlspecialchars(isset($mou['notes']) ? $mou['notes'] : '', ENT_COMPAT, 'UTF-8'); ?></textarea>
+                            <textarea name="notes" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" rows="3" placeholder="หมายเหตุ (ถ้ามี)"><?php echo htmlspecialchars(isset($mou['notes']) ? $mou['notes'] : '', ENT_COMPAT, 'UTF-8'); ?></textarea>
                             <div class="flex gap-2">
-                                <button type="submit" class="btn btn-primary" style="padding: 0.25rem 1rem; font-size: 0.875rem; background: #4f46e5;">บันทึกหมายเหตุ</button>
-                                <button type="button" class="btn btn-secondary" onclick="toggleNotesEdit();" style="padding: 0.25rem 1rem; font-size: 0.875rem;">ยกเลิก</button>
+                                <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-colors shadow-sm" style="padding: 0.25rem 1rem; font-size: 0.875rem; background: #4f46e5;">บันทึกหมายเหตุ</button>
+                                <button type="button" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors" onclick="toggleNotesEdit();" style="padding: 0.25rem 1rem; font-size: 0.875rem;">ยกเลิก</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Two-Column Grid -->
-            <div class="detail-grid">
+            <!-- Two-Column Grid (Progress & Description) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 w-full">
                 <!-- Left: Progress -->
-                <div class="section-card">
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8 relative overflow-hidden">
                     <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center gap-3">
-                            <div class="section-title" style="margin-right: 0.25rem; margin-bottom:0;">
+                            <div class="text-xl font-bold text-slate-900 font-['Chakra_Petch'] flex items-center gap-2" style="margin-right: 0.25rem; margin-bottom:0;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/><path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/></svg>
                                 ความคืบหน้า
                             </div>
@@ -324,29 +335,43 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         $active_index = max(0, $active_index);
                         $progress_percent = count($timeline_steps) > 0 ? round(($completed_count / count($timeline_steps)) * 100) : 0;
                         ?>
-                        <div style="color:var(--danger); font-size:0.875rem; font-weight:600; display:flex; align-items:center; gap:0.25rem;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"></svg>
+                        <div style="color:var(--primary); font-size:1.1rem; font-weight:700; display:flex; align-items:center; gap:0.25rem;">
                             <?php echo $progress_percent; ?>%
                         </div>
                     </div>
-                    <div class="timeline" style="margin-top: 1rem;">
+                    
+                    <!-- Visual Progress Bar -->
+                    <div class="w-full bg-slate-100 rounded-full h-2 mb-8 mt-2 overflow-hidden shadow-inner">
+                        <div class="bg-indigo-500 h-2 rounded-full transition-all duration-500 ease-in-out" style="width: <?php echo $progress_percent; ?>%; background: linear-gradient(90deg, #6366f1, #4f46e5);"></div>
+                    </div>
+
+                    <div class="relative pl-6 border-l-2 border-slate-200 space-y-6" style="margin-top: 1rem;">
                         <?php 
                         foreach($timeline_steps as $index => $step): 
                             $has_date = !empty($mou[$step['column']]);
                             $is_active = $has_date ? 'active' : '';
-                            $step_date = $has_date ? date('d/m/Y', strtotime($mou[$step['column']])) : '';
+                            
+                            if ($has_date) {
+                                $ts = strtotime($mou[$step['column']]);
+                                $year_be = date('Y', $ts) + 543;
+                                $step_date = date('d/m/', $ts) . $year_be;
+                            } else {
+                                $step_date = '';
+                            }
+                            
                             $raw_date = $has_date ? $mou[$step['column']] : '';
                             
                             $text_color = $has_date ? 'var(--text-main)' : 'var(--text-muted)';
+                            $dot_color = $has_date ? 'bg-indigo-600' : 'bg-slate-300';
                             $is_clickable = ($index <= $highest_date_index + 1);
                         ?>
                         <div class="timeline-item <?php echo $is_active; ?>" 
                              data-clickable="<?php echo $is_clickable ? 'true' : 'false'; ?>"
                              onclick="openTimelineModal('<?php echo $step['column']; ?>', '<?php echo htmlspecialchars($step['label'], ENT_QUOTES); ?>', '<?php echo $raw_date; ?>', <?php echo $is_clickable ? 'true' : 'false'; ?>)" 
                              style="cursor: not-allowed; position: relative; transition: all 0.2s;">
-                            <div class="timeline-node"></div>
+                            <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-4 border-white <?php echo $dot_color; ?> shadow-sm"></div>
                             <div class="timeline-content" style="padding-bottom: 0.5rem;">
-                                <div class="timeline-text" style="font-size: 0.875rem; color: <?php echo $text_color; ?>; line-height: 1.4;"><?php echo htmlspecialchars($step['label']); ?></div>
+                                <div class="font-medium" style="font-size: 0.875rem; color: <?php echo $text_color; ?>; line-height: 1.4;"><?php echo htmlspecialchars($step['label']); ?></div>
                                 <?php if($step_date): ?>
                                 <div style="font-size: 0.75rem; color: var(--primary); margin-top: 0.25rem; font-weight: 600;"><?php echo $step_date; ?></div>
                                 <?php endif; ?>
@@ -354,51 +379,51 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         </div>
                         <?php endforeach; ?>
                     </div>
-                    <div class="timeline-footer">
+                    <div class="mt-6 text-xs text-slate-500 text-center bg-slate-50 py-2 rounded-lg">
                         คลิกที่ขั้นตอนเพื่ออัปเดตความคืบหน้า
                     </div>
                 </div>
 
                 <!-- Right: Details List -->
-                <div class="section-card">
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8 relative overflow-hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <div class="section-title" style="margin-bottom:0;">
+                        <div class="text-xl font-bold text-slate-900 font-['Chakra_Petch'] flex items-center gap-2" style="margin-bottom:0;">
                             รายละเอียด
                         </div>
-                        <a href="#" class="btn-edit-text" onclick="toggleMouEdit(); return false;">
+                        <a href="#" class="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors" onclick="toggleMouEdit(); return false;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>
                             แก้ไข
                         </a>
                     </div>
                     
                     <div class="detail-list" id="mou-view-state">
-                        <div class="detail-row">
-                            <div class="detail-label">สถาบันที่ร่วม</div>
-                            <div class="detail-value"><?php echo htmlspecialchars($mou['institution'] ? $mou['institution'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
+                        <div class="flex flex-col py-3 border-b border-slate-100 last:border-0">
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">สถาบันที่ร่วม</div>
+                            <div class="text-sm font-medium text-slate-900"><?php echo htmlspecialchars($mou['institution'] ? $mou['institution'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">ผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา</div>
-                            <div class="detail-value"><?php echo htmlspecialchars($mou['contact'] ? $mou['contact'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
+                        <div class="flex flex-col py-3 border-b border-slate-100 last:border-0">
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">ผู้ประสานงานและที่อยู่ติดต่อคู่สัญญา</div>
+                            <div class="text-sm font-medium text-slate-900"><?php echo htmlspecialchars($mou['contact'] ? $mou['contact'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">ผู้รับผิดชอบ</div>
-                            <div class="detail-value"><?php echo htmlspecialchars($mou['staff'] ? $mou['staff'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
+                        <div class="flex flex-col py-3 border-b border-slate-100 last:border-0">
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">ผู้รับผิดชอบ</div>
+                            <div class="text-sm font-medium text-slate-900"><?php echo htmlspecialchars($mou['staff'] ? $mou['staff'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">ระยะเวลา</div>
-                            <div class="detail-value"><?php echo htmlspecialchars($mou['period'] ? $mou['period'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
+                        <div class="flex flex-col py-3 border-b border-slate-100 last:border-0">
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">ระยะเวลา</div>
+                            <div class="text-sm font-medium text-slate-900"><?php echo htmlspecialchars($mou['period'] ? $mou['period'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">รูปแบบเอกสาร</div>
-                            <div class="detail-value"><?php echo htmlspecialchars($mou['type'] ? $mou['type'] : 'MOU', ENT_COMPAT, 'UTF-8'); ?></div>
+                        <div class="flex flex-col py-3 border-b border-slate-100 last:border-0">
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">รูปแบบเอกสาร</div>
+                            <div class="text-sm font-medium text-slate-900"><?php echo htmlspecialchars($mou['type'] ? $mou['type'] : 'MOU', ENT_COMPAT, 'UTF-8'); ?></div>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">ประเทศ</div>
-                            <div class="detail-value"><?php echo htmlspecialchars($mou['nation'] ? $mou['nation'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
+                        <div class="flex flex-col py-3 border-b border-slate-100 last:border-0">
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">ประเทศ</div>
+                            <div class="text-sm font-medium text-slate-900"><?php echo htmlspecialchars($mou['nation'] ? $mou['nation'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">ขอบเขตความร่วมมือ</div>
-                            <div class="detail-value"><?php 
+                        <div class="flex flex-col py-3 border-b border-slate-100 last:border-0">
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">ขอบเขตความร่วมมือ</div>
+                            <div class="text-sm font-medium text-slate-900"><?php 
                                 $cc = $mou['country_check'];
                                 $cc_display = $cc;
                                 if ($cc === 'InsideSpecial') $cc_display = 'ภายในประเทศ ลักษณะเฉพาะกิจ';
@@ -408,10 +433,10 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                             ?></div>
                         </div>
                         <?php if (!empty($mou['mou_pdf'])): ?>
-                        <div class="detail-row" style="align-items: center;">
-                            <div class="detail-label">เอกสาร MOU</div>
-                            <div class="detail-value">
-                                <a href="/intern_mou2/pdf?id=<?php echo $id; ?>" target="_blank" class="btn btn-secondary" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.25rem 0.75rem; font-size:0.875rem; color:#ef4444; border-color:#fca5a5; background:#fef2f2;">
+                        <div class="flex flex-col sm:flex-row sm:items-center py-3 border-b border-slate-100 last:border-0 gap-2">
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">เอกสาร MOU</div>
+                            <div class="text-sm font-medium text-slate-900">
+                                <a href="/intern_mou2/pdf?id=<?php echo $id; ?>" target="_blank" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.25rem 0.75rem; font-size:0.875rem; color:#ef4444; border-color:#fca5a5; background:#fef2f2;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38.574.574 0 0 1-.238.241.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084 0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.249 0 .45.05.603.151a.89.89 0 0 1 .353.45c.065.195.099.444.099.749 0 .307-.034.557-.101.751a.88.88 0 0 1-.354.446c-.15.101-.351.151-.603.151h-.56V12.495Zm3.743-.645v3.999h.791v-1.558h.906v-.645h-.906v-1.151h1.159v-.645H7.896Z"/></svg>
                                     ดูไฟล์ PDF
                                 </a>
@@ -427,17 +452,17 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         
                         <div class="form-group mb-4">
                             <label style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.25rem; display:block;">สถาบันที่ร่วม</label>
-                            <input type="text" name="institution" class="form-control" value="<?php echo htmlspecialchars($mou['institution'] ? $mou['institution'] : '', ENT_COMPAT, 'UTF-8'); ?>">
+                            <input type="text" name="institution" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" value="<?php echo htmlspecialchars($mou['institution'] ? $mou['institution'] : '', ENT_COMPAT, 'UTF-8'); ?>">
                         </div>
 
                         <div class="form-group mb-4">
                             <label style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.25rem; display:block;">ผู้ประสานงาน</label>
-                            <input type="text" name="contact" class="form-control" value="<?php echo htmlspecialchars($mou['contact'] ? $mou['contact'] : '', ENT_COMPAT, 'UTF-8'); ?>">
+                            <input type="text" name="contact" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" value="<?php echo htmlspecialchars($mou['contact'] ? $mou['contact'] : '', ENT_COMPAT, 'UTF-8'); ?>">
                         </div>
 
                         <div class="form-group mb-4">
                             <label style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.25rem; display:block;">ผู้รับผิดชอบ</label>
-                            <input type="text" name="staff" class="form-control" value="<?php echo htmlspecialchars($mou['staff'] ? $mou['staff'] : '', ENT_COMPAT, 'UTF-8'); ?>">
+                            <input type="text" name="staff" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" value="<?php echo htmlspecialchars($mou['staff'] ? $mou['staff'] : '', ENT_COMPAT, 'UTF-8'); ?>">
                         </div>
 
                         <div class="form-group mb-4">
@@ -451,15 +476,15 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                     $p_start = isset($period_parts[0]) ? trim($period_parts[0]) : '';
                                     $p_end = isset($period_parts[1]) ? trim($period_parts[1]) : '';
                                 ?>
-                                <input type="date" name="period_start" class="form-control" style="width: 100%;" value="<?php echo $p_start; ?>">
+                                <input type="date" name="period_start" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" style="width: 100%;" value="<?php echo $p_start; ?>">
                                 <span style="color:var(--text-muted); font-size:0.875rem;">ถึง</span>
-                                <input type="date" name="period_end" class="form-control" style="width: 100%;" value="<?php echo $p_end; ?>">
+                                <input type="date" name="period_end" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" style="width: 100%;" value="<?php echo $p_end; ?>">
                             </div>
                         </div>
 
                         <div class="form-group mb-4">
                             <label style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.25rem; display:block;">ประเภทความร่วมมือ</label>
-                            <select name="type" class="form-control">
+                            <select name="type" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                 <option value="MOU" <?php echo $mou['type'] === 'MOU' ? 'selected' : ''; ?>>MOU</option>
                                 <option value="MOA" <?php echo $mou['type'] === 'MOA' ? 'selected' : ''; ?>>MOA</option>
                                 <option value="LOI" <?php echo $mou['type'] === 'LOI' ? 'selected' : ''; ?>>LOI</option>
@@ -469,7 +494,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
 
                         <div class="form-group mb-4">
                             <label style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.25rem; display:block;">ประเทศ</label>
-                            <select name="nation" class="form-control">
+                            <select name="nation" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                 <option value="">เลือกประเทศ</option>
                                 <option value="ไทย" <?php echo $mou['nation'] === 'ไทย' ? 'selected' : ''; ?>>ไทย</option>
                                 <?php foreach ($nations as $n): ?>
@@ -480,7 +505,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
 
                         <div class="form-group mb-4">
                             <label style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.25rem; display:block;">ประเภท (Inside/Outside)</label>
-                            <select name="country_check" class="form-control">
+                            <select name="country_check" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                 <option value="InsideSpecial" <?php echo ($mou['country_check'] === 'InsideSpecial' || $mou['country_check'] === 'ภายในประเทศ ลักษณะเฉพาะกิจ') ? 'selected' : ''; ?>>ภายในประเทศ ลักษณะเฉพาะกิจ</option>
                                 <option value="Outside" <?php echo ($mou['country_check'] === 'Outside' || $mou['country_check'] === 'ต่างประเทศ') ? 'selected' : ''; ?>>ต่างประเทศ</option>
                                 <option value="Inside" <?php echo ($mou['country_check'] === 'Inside' || $mou['country_check'] === 'ภายในประเทศ') ? 'selected' : ''; ?>>ภายในประเทศ</option>
@@ -488,32 +513,32 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         </div>
 
                         <div class="flex justify-end gap-3 mt-6">
-                            <button type="button" class="btn btn-secondary" onclick="toggleMouEdit();" style="padding: 0.5rem 1.5rem; border-radius: var(--radius-md); box-shadow:none; background: #fff; border: 1px solid var(--border);">ยกเลิก</button>
-                            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1.5rem; background: #4f46e5; border-radius: var(--radius-md); box-shadow:none;">บันทึก</button>
+                            <button type="button" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors" onclick="toggleMouEdit();" style="padding: 0.5rem 1.5rem; border-radius: var(--radius-md); box-shadow:none; background: #fff; border: 1px solid var(--border);">ยกเลิก</button>
+                            <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-colors shadow-sm" style="padding: 0.5rem 1.5rem; background: #4f46e5; border-radius: var(--radius-md); box-shadow:none;">บันทึก</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Activities Section -->
-            <div class="mb-8">
+            <!-- Activities Section (Moved Below) -->
+            <div class="mb-8 w-full mt-8 clear-both">
                 <div class="flex justify-between items-center mb-4">
-                    <div class="section-title" style="margin-bottom:0;">
+                    <div class="text-xl font-bold text-slate-900 font-['Chakra_Petch'] flex items-center gap-2" style="margin-bottom:0;">
                         <span style="color:var(--primary); font-size:1.25rem; line-height:1;">■</span>
                         กิจกรรม
                     </div>
-                    <button class="btn-add-light" onclick="toggleAddActivity()">
+                    <button class="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-600 hover:text-white transition-all shadow-sm" onclick="toggleAddActivity()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
                         เพิ่มกิจกรรม
                     </button>
                 </div>
 
                 <!-- Filter Toolbar -->
-                <div class="section-card mb-4" style="padding: 0.75rem 1rem;">
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 mb-6 p-6" style="padding: 0.75rem 1rem;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.5rem; align-items: end;">
                         <div>
                             <label style="display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 0.2rem; font-weight: 500;">ประเภท</label>
-                            <select id="filter-type" class="form-control" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
+                            <select id="filter-type" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
                                 <option value="">ทั้งหมด</option>
                                 <option value="Inbound">Inbound</option>
                                 <option value="Outbound">Outbound</option>
@@ -521,7 +546,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 0.2rem; font-weight: 500;">รูปแบบ</label>
-                            <select id="filter-service" class="form-control" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
+                            <select id="filter-service" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
                                 <option value="">ทั้งหมด</option>
                                 <option value="Onsite">Onsite</option>
                                 <option value="Online">Online</option>
@@ -529,7 +554,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 0.2rem; font-weight: 500;">หมวดหมู่</label>
-                            <select id="filter-category" class="form-control" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
+                            <select id="filter-category" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
                                 <option value="">ทั้งหมด</option>
                                 <option value="ด้านการศึกษา">ด้านการศึกษา</option>
                                 <option value="ด้านบริการวิชาการ">ด้านบริการวิชาการ</option>
@@ -545,7 +570,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 0.2rem; font-weight: 500;">จัดเรียง</label>
-                            <select id="sort-select" class="form-control" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
+                            <select id="sort-select" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" style="padding: 0.35rem 0.5rem; font-size: 0.8rem; width: 100%;">
                                 <option value="newest">ใหม่สุด</option>
                                 <option value="oldest">เก่าสุด</option>
                                 <option value="date_newest">วันที่ (ใหม่)</option>
@@ -558,26 +583,26 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                 </div>
 
                 <!-- Add Activity Form (Hidden by default) -->
-                <div class="section-card mb-4" id="add-activity-form" style="display: none; padding: 2rem;">
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 mb-6 p-6" id="add-activity-form" style="display: none; padding: 2rem;">
                     <h4 style="margin-bottom: 1.5rem; font-size: 1.125rem; font-weight: 600;">เพิ่มกิจกรรมใหม่</h4>
                     <form method="POST" action="/intern_mou2/actions/process_activity.php" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="create">
                         <input type="hidden" name="mouid" value="<?php echo $id; ?>">
                         
                         <div class="form-group mb-4">
-                            <input type="text" name="activities" class="form-control" required placeholder="ชื่อกิจกรรม *">
+                            <input type="text" name="activities" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" required placeholder="ชื่อกิจกรรม *">
                         </div>
                         
                         <div class="form-group mb-4">
-                            <textarea name="activities_desc" class="form-control" rows="4" placeholder="คำอธิบายกิจกรรม (ถ้ามี)" style="resize: vertical;"></textarea>
+                            <textarea name="activities_desc" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" rows="4" placeholder="คำอธิบายกิจกรรม (ถ้ามี)" style="resize: vertical;"></textarea>
                         </div>
                         
-                        <div class="form-row mb-4" style="gap: 1rem;">
+                        <div class="flex flex-col sm:flex-row mb-4 w-full" style="gap: 1rem;">
                             <div class="form-col" style="flex: 1;">
-                                <input type="date" name="activities_date" class="form-control" placeholder="mm/dd/yyyy">
+                                <input type="date" name="activities_date" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" placeholder="mm/dd/yyyy">
                             </div>
                             <div class="form-col" style="flex: 1;">
-                                <select name="activities_type" class="form-control">
+                                <select name="activities_type" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                     <option value="">เลือกประเภทกิจกรรม</option>
                                     <option value="Inbound">Inbound</option>
                                     <option value="Outbound">Outbound</option>
@@ -585,16 +610,16 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                             </div>
                         </div>
 
-                        <div class="form-row mb-4" style="gap: 1rem;">
+                        <div class="flex flex-col sm:flex-row mb-4 w-full" style="gap: 1rem;">
                             <div class="form-col" style="flex: 1;">
-                                <select name="activities_service" class="form-control">
+                                <select name="activities_service" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                     <option value="">เลือกรูปแบบ</option>
                                     <option value="Onsite">Onsite</option>
                                     <option value="Online">Online</option>
                                 </select>
                             </div>
                             <div class="form-col" style="flex: 1;">
-                                <select name="activities_category" class="form-control">
+                                <select name="activities_category" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                     <option value="">เลือกหมวดหมู่</option>
                                     <option value="ด้านการศึกษา">ด้านการศึกษา</option>
                                     <option value="ด้านบริการวิชาการ">ด้านบริการวิชาการ</option>
@@ -609,7 +634,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         </div>
                         
                         <div class="form-group mb-4">
-                            <input type="number" name="activities_budget" class="form-control" placeholder="งบประมาณ (บาท)">
+                            <input type="number" name="activities_budget" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" placeholder="งบประมาณ (บาท)">
                         </div>
                         
                         <div class="form-group mb-4">
@@ -622,26 +647,26 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                         </div>
                         
                         <div class="flex" style="justify-content: flex-end; gap: 0.75rem; margin-top: 2rem;">
-                            <button type="button" class="btn btn-secondary" onclick="toggleAddActivity()" style="padding: 0.5rem 1.5rem; border-radius: var(--radius-md);">ยกเลิก</button>
-                            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1.5rem; border-radius: var(--radius-md); background: #4f46e5; box-shadow: none;">บันทึก</button>
+                            <button type="button" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors" onclick="toggleAddActivity()" style="padding: 0.5rem 1.5rem; border-radius: var(--radius-md);">ยกเลิก</button>
+                            <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-colors shadow-sm" style="padding: 0.5rem 1.5rem; border-radius: var(--radius-md); background: #4f46e5; box-shadow: none;">บันทึก</button>
                         </div>
                     </form>
                 </div>
 
                 <!-- Activities List / Empty State -->
                 <?php if (mysqli_num_rows($act_result) === 0): ?>
-                    <div class="empty-state-dashed">
-                        <svg class="empty-state-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                    <div class="flex flex-col items-center justify-center py-16 px-4 border-2 border-dashed border-slate-200 rounded-3xl bg-slate-50 text-center">
+                        <svg class="w-16 h-16 text-slate-300 mb-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                             <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
                         </svg>
                         <div>
-                            <div class="empty-state-title">ยังไม่มีกิจกรรม</div>
-                            <div class="empty-state-subtitle">กดปุ่ม "เพิ่มกิจกรรม" เพื่อเริ่มต้น</div>
+                            <div class="text-lg font-bold text-slate-900 mb-1">ยังไม่มีกิจกรรม</div>
+                            <div class="text-sm text-slate-500">กดปุ่ม "เพิ่มกิจกรรม" เพื่อเริ่มต้น</div>
                         </div>
                     </div>
                 <?php else: ?>
-                    <div class="activities-grid">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <?php while ($act = mysqli_fetch_assoc($act_result)): ?>
                         <?php 
                             // Custom Date Formatting to match mockup (e.g. 18/6/2569)
@@ -654,7 +679,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                 }
                             }
                         ?>
-                        <div class="activity-card" id="activity-card-<?php echo $act['mouid']; ?>"
+                        <div class="activity-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" id="activity-card-<?php echo $act['mouid']; ?>"
                              data-mouid="<?php echo $act['mouid']; ?>"
                              data-type="<?php echo htmlspecialchars($act['activities_type'], ENT_COMPAT, 'UTF-8'); ?>"
                              data-service="<?php echo htmlspecialchars($act['activities_service'], ENT_COMPAT, 'UTF-8'); ?>"
@@ -663,8 +688,8 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                              data-budget="<?php echo $act['activities_budget'] ? $act['activities_budget'] : 0; ?>"
                         >
                             <!-- View State -->
-                            <div id="activity-view-<?php echo $act['mouid']; ?>" class="activity-view-wrapper" style="display:flex;">
-                                <div class="activity-image-placeholder" style="padding:0;">
+                            <div id="activity-view-<?php echo $act['mouid']; ?>" class="flex flex-col h-full" style="display:flex;">
+                                <div class="bg-slate-100 w-full h-48 flex items-center justify-center text-slate-400 flex-col gap-2 relative" style="padding:0; flex-shrink:0;">
                                     <?php $imgs = isset($activity_images[$act['mouid']]) ? $activity_images[$act['mouid']] : array(); ?>
                                     <?php if (count($imgs) > 0): ?>
                                         <div style="position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 4px;">
@@ -683,9 +708,9 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                         <span>ยังไม่มีรูปภาพ</span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="activity-card-body">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <div class="activity-title"><?php echo htmlspecialchars($act['activities'] ? $act['activities'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
+                                <div class="p-6 flex-1 flex flex-col">
+                                    <div class="flex justify-between items-start mb-2 gap-4">
+                                        <div class="text-xl font-bold text-slate-900 mb-2 break-words" style="word-break: break-word; min-width: 0;"><?php echo htmlspecialchars($act['activities'] ? $act['activities'] : '-', ENT_COMPAT, 'UTF-8'); ?></div>
                                         <div class="activity-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
                                             <button type="button" class="btn-icon" title="แก้ไข" onclick="toggleEditActivity(<?php echo $act['mouid']; ?>)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>
@@ -700,11 +725,11 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                             </form>
                                         </div>
                                     </div>
-                                    <div class="activity-date">
+                                    <div class="flex items-center gap-2 text-sm text-slate-500 mb-4 bg-slate-50 inline-flex px-3 py-1.5 rounded-lg border border-slate-100">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
-                                        <span class="badge-date">วันที่จัดกิจกรรม: <?php echo htmlspecialchars($th_date, ENT_COMPAT, 'UTF-8'); ?></span>
+                                        <span class="font-medium">วันที่จัดกิจกรรม: <?php echo htmlspecialchars($th_date, ENT_COMPAT, 'UTF-8'); ?></span>
                                     </div>
-                                    <div class="activity-desc" style="margin-bottom: 1rem;">
+                                    <div class="text-sm text-slate-600 leading-relaxed break-words" style="margin-bottom: 1rem; word-break: break-word;">
                                         <?php echo nl2br(htmlspecialchars($act['activities_desc'] ? $act['activities_desc'] : '-', ENT_COMPAT, 'UTF-8')); ?>
                                     </div>
                                     <div class="flex flex-wrap" style="gap: 0.5rem; margin-bottom: 1rem;">
@@ -725,18 +750,18 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                         <?php endif; ?>
                                     </div>
                                     <div class="mt-auto">
-                                        <span class="badge-budget">งบประมาณ: <?php echo $act['activities_budget'] ? number_format($act['activities_budget']) . ' บาท' : 'ไม่มีงบประมาณ'; ?></span>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-bold bg-green-50 text-green-700 border border-green-100">งบประมาณ: <?php echo $act['activities_budget'] ? number_format($act['activities_budget']) . ' บาท' : 'ไม่มีงบประมาณ'; ?></span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Edit State -->
-                            <form method="POST" action="/intern_mou2/actions/process_activity.php" enctype="multipart/form-data" id="activity-edit-<?php echo $act['mouid']; ?>" class="activity-edit-wrapper" style="display:none;">
+                            <form method="POST" action="/intern_mou2/actions/process_activity.php" enctype="multipart/form-data" id="activity-edit-<?php echo $act['mouid']; ?>" class="activity-edit-wrapper flex flex-col h-full" style="display:none;">
                                 <input type="hidden" name="action" value="update">
                                 <input type="hidden" name="id" value="<?php echo $act['mouid']; ?>">
                                 <input type="hidden" name="mouid" value="<?php echo $id; ?>">
                                 
-                                <div class="activity-image-placeholder" style="padding:0;">
+                                <div class="bg-slate-100 w-full h-48 flex items-center justify-center text-slate-400 flex-col gap-2 relative" style="padding:0; flex-shrink:0;">
                                     <?php $imgs = isset($activity_images[$act['mouid']]) ? $activity_images[$act['mouid']] : array(); ?>
                                     <?php if (count($imgs) > 0): ?>
                                         <div style="display: flex; overflow-x: auto; flex-wrap: nowrap; gap: 0.5rem; width: 100%; padding: 0.5rem;">
@@ -752,16 +777,16 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                         <span>ยังไม่มีรูปภาพ</span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="activity-card-body" style="gap: 0.5rem; padding: 1rem;">
-                                    <input type="text" name="activities" class="form-control" required value="<?php echo htmlspecialchars($act['activities'], ENT_COMPAT, 'UTF-8'); ?>">
-                                    <textarea name="activities_desc" class="form-control" rows="4" placeholder="คำอธิบายกิจกรรม (ไม่บังคับ)" style="resize: vertical;"><?php echo htmlspecialchars($act['activities_desc'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+                                <div class="activity-card-body flex-1 flex flex-col" style="gap: 0.5rem; padding: 1rem;">
+                                    <input type="text" name="activities" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" required value="<?php echo htmlspecialchars($act['activities'], ENT_COMPAT, 'UTF-8'); ?>">
+                                    <textarea name="activities_desc" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" rows="4" placeholder="คำอธิบายกิจกรรม (ไม่บังคับ)" style="resize: vertical;"><?php echo htmlspecialchars($act['activities_desc'], ENT_COMPAT, 'UTF-8'); ?></textarea>
                                     
-                                    <div class="form-row" style="gap: 0.5rem;">
+                                    <div class="flex flex-col sm:flex-row w-full" style="gap: 0.5rem;">
                                         <div class="form-col" style="flex: 1;">
-                                            <input type="date" name="activities_date" class="form-control" value="<?php echo $act['activities_date']; ?>">
+                                            <input type="date" name="activities_date" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" value="<?php echo $act['activities_date']; ?>">
                                         </div>
                                         <div class="form-col" style="flex: 1;">
-                                            <select name="activities_type" class="form-control">
+                                            <select name="activities_type" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                                 <option value="">เลือกประเภทกิจกรรม</option>
                                                 <option value="Inbound" <?php echo $act['activities_type'] == 'Inbound' ? 'selected' : ''; ?>>Inbound</option>
                                                 <option value="Outbound" <?php echo $act['activities_type'] == 'Outbound' ? 'selected' : ''; ?>>Outbound</option>
@@ -769,16 +794,16 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                         </div>
                                     </div>
                                     
-                                    <div class="form-row" style="gap: 0.5rem;">
+                                    <div class="flex flex-col sm:flex-row w-full" style="gap: 0.5rem;">
                                         <div class="form-col" style="flex: 1;">
-                                            <select name="activities_service" class="form-control">
+                                            <select name="activities_service" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                                 <option value="">เลือกบริการ</option>
                                                 <option value="Onsite" <?php echo $act['activities_service'] == 'Onsite' ? 'selected' : ''; ?>>Onsite</option>
                                                 <option value="Online" <?php echo $act['activities_service'] == 'Online' ? 'selected' : ''; ?>>Online</option>
                                             </select>
                                         </div>
                                         <div class="form-col" style="flex: 1;">
-                                            <select name="activities_category" class="form-control">
+                                            <select name="activities_category" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors">
                                                 <option value="">เลือกหมวดหมู่</option>
                                                 <option value="ด้านการศึกษา" <?php echo $act['activities_category'] == 'ด้านการศึกษา' ? 'selected' : ''; ?>>ด้านการศึกษา</option>
                                                 <option value="ด้านบริการวิชาการ" <?php echo $act['activities_category'] == 'ด้านบริการวิชาการ' ? 'selected' : ''; ?>>ด้านบริการวิชาการ</option>
@@ -792,7 +817,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                         </div>
                                     </div>
                                     
-                                    <input type="number" name="activities_budget" class="form-control" value="<?php echo $act['activities_budget']; ?>">
+                                    <input type="number" name="activities_budget" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" value="<?php echo $act['activities_budget']; ?>">
                                     
                                     <div style="margin-top: 0.5rem;">
                                         <label class="btn-edit-text" style="color:var(--primary); font-weight:500; cursor:pointer;">
@@ -804,8 +829,8 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                                     </div>
                                     
                                     <div class="flex" style="justify-content: flex-end; gap: 0.5rem; margin-top: auto;">
-                                        <button type="button" class="btn btn-secondary" onclick="toggleEditActivity(<?php echo $act['mouid']; ?>)" style="padding: 0.25rem 1rem;">ยกเลิก</button>
-                                        <button type="submit" class="btn btn-primary" style="padding: 0.25rem 1rem; background: #4f46e5; box-shadow: none;">บันทึก</button>
+                                        <button type="button" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors" onclick="toggleEditActivity(<?php echo $act['mouid']; ?>)" style="padding: 0.25rem 1rem;">ยกเลิก</button>
+                                        <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-colors shadow-sm" style="padding: 0.25rem 1rem; background: #4f46e5; box-shadow: none;">บันทึก</button>
                                     </div>
                                 </div>
                             </form>
@@ -820,7 +845,7 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
                 <form method="POST" action="/intern_mou2/actions/process_mou.php" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูล MOU นี้? ข้อมูลกิจกรรมที่เกี่ยวข้องจะถูกลบด้วย');">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?php echo $id; ?>">
-                    <button type="submit" class="btn-delete-light">
+                    <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
                         ลบข้อมูล MOU นี้
                     </button>
@@ -830,43 +855,45 @@ $nations = array('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anti
         </main>
     </div>
 
-    <!-- Timeline Update Modal -->
-    <div id="timeline-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
-        <div class="section-card" style="width: 100%; max-width: 450px; padding: 2rem;">
+    <div id="timeline-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 md:p-8 w-[95%] max-w-md relative overflow-hidden flex flex-col">
             <div class="flex justify-between items-center mb-6">
-                <h4 style="font-size: 1.25rem; font-weight: 600; color: var(--text-main); margin: 0;">อัปเดตความคืบหน้า</h4>
-                <button type="button" class="btn-icon" onclick="document.getElementById('timeline-modal').style.display='none';">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                <h4 class="text-xl font-bold text-slate-900 font-['Chakra_Petch'] m-0">อัปเดตความคืบหน้า</h4>
+                <button type="button" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full p-2 transition-colors flex items-center justify-center focus:outline-none" onclick="document.getElementById('timeline-modal').style.display='none';">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
                 </button>
             </div>
-            <form method="POST" action="/intern_mou2/actions/process_mou.php" id="timeline-form" enctype="multipart/form-data">
+            <form method="POST" action="/intern_mou2/actions/process_mou.php" id="timeline-form" enctype="multipart/form-data" class="flex flex-col gap-4">
                 <input type="hidden" name="action" id="timeline-action-input" value="update_timeline">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <input type="hidden" name="step_column" id="timeline_step_column" value="">
                 <input type="hidden" name="step_label" id="timeline_step_label" value="">
                 
-                <div class="form-group mb-4">
-                    <label style="font-size:0.875rem; font-weight:500; margin-bottom:0.5rem; display:block;">ขั้นตอน</label>
-                    <input type="text" id="timeline_step_display" class="form-control" disabled style="background: #f8fafc; color: var(--text-muted);">
+                <div class="form-group">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">ขั้นตอน</label>
+                    <input type="text" id="timeline_step_display" class="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500 focus:outline-none" disabled>
                 </div>
 
-                <div class="form-group mb-4">
-                    <label style="font-size:0.875rem; font-weight:500; margin-bottom:0.5rem; display:block;">วันที่เสร็จสิ้น</label>
-                    <input type="date" name="step_date" id="timeline_step_date" class="form-control" required>
+                <div class="form-group">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">วันที่เสร็จสิ้น</label>
+                    <input type="date" name="step_date" id="timeline_step_date" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" required>
                 </div>
                 
-                <div class="form-group mb-4" id="timeline_pdf_group" style="display: none;">
-                    <label style="font-size:0.875rem; font-weight:500; margin-bottom:0.5rem; display:block;">ไฟล์เอกสาร MOU ที่ลงนามแล้ว (PDF)</label>
-                    <input type="file" name="mou_pdf" id="timeline_mou_pdf" accept="application/pdf" class="form-control" style="padding: 0.375rem 0.75rem;">
+                <div class="form-group" id="timeline_pdf_group" style="display: none;">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">ไฟล์เอกสาร MOU ที่ลงนามแล้ว (PDF)</label>
+                    <input type="file" name="mou_pdf" id="timeline_mou_pdf" accept="application/pdf" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                 </div>
 
-                <div class="flex justify-end gap-3 mt-6">
-                    <button type="button" class="btn btn-secondary" style="padding: 0.5rem 1rem; border-color:var(--danger); color:var(--danger); margin-right: auto; display: none; align-items:center; gap:0.25rem;" id="timeline_clear_btn" onclick="clearTimelineStep()">
+                <div class="flex justify-between items-center mt-4">
+                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-xl hover:bg-red-50 hover:border-red-300 transition-colors shadow-sm focus:outline-none" id="timeline_clear_btn" style="display: none;" onclick="clearTimelineStep()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/></svg>
-                        ย้อนกลับ / ล้างข้อมูล
+                        ย้อนกลับ / ล้าง
                     </button>
-                    <button type="button" class="btn btn-secondary" style="padding: 0.5rem 1.5rem;" onclick="document.getElementById('timeline-modal').style.display='none';">ยกเลิก</button>
-                    <button type="submit" class="btn btn-primary" style="background:#4f46e5; padding: 0.5rem 1.5rem;">บันทึก</button>
+                    
+                    <div class="flex gap-2 ml-auto">
+                        <button type="button" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors shadow-sm focus:outline-none" onclick="document.getElementById('timeline-modal').style.display='none';">ยกเลิก</button>
+                        <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-xl hover:from-indigo-700 hover:to-indigo-800 transition-colors shadow-sm focus:outline-none">บันทึก</button>
+                    </div>
                 </div>
             </form>
         </div>
